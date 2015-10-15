@@ -25,6 +25,7 @@ login:
 
 
 searchdb:
+    
     dbname: weibo_xhj
     host: 114.212.191.119
     port: 27017
