@@ -22,6 +22,8 @@ login:
     - username: 18204318241
       password: wq497727774
 
+
+
 searchdb:
     dbname: weibo_xhj
     host: 114.212.191.119
