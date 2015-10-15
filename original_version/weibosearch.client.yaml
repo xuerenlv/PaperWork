@@ -1,0 +1,68 @@
+searchdb:
+    dbname: all_users_db
+    host: 114.212.191.119
+    port: 27017
+    BOOL_getcomments: 0
+
+login:
+    - username: njunlpir@163.com
+      password: ilove2hcx
+    - username: flyaway1217@126.com
+      password: 1357890
+    - username: 474407250@qq.com
+      password: justfortest
+    - username: 934193889@qq.com
+      password: niuliqiangsina
+    - username: howardit@126.com
+      password: howardit@911
+    - username: chengchuan90@yahoo.com
+      password: yahoo_900119
+    - username: chengc@nlp.nju.edu.cn
+      password: justfortest
+    - username: cc.square0@gmail.com
+      password: justfortest
+    - username: yuzt@nlp.nju.edu.cn
+      password: weibo112233
+    - username: 18623548894
+      password: a666888
+    - username: 18623548921
+      password: a666888
+    - username: 18623548928
+      password: a666888
+    - username: 18623548949
+      password: a666888
+    - username: 18623548958
+      password: a666888
+    - username: 18623548963
+      password: a666888
+cookie_file: weibo_login_cookies.dat
+
+logdb:
+    dbname: weibosearch
+    host: localhost
+    user: root
+    password: 112233
+    charset: utf8
+
+mysqldb_pool:
+    mincached: 20
+    maxcached: 100
+    maxconnections: 100
+    blocking: False
+    maxusage: 0
+    setsession: None
+    reset: True
+    failures: False
+    ping: 1
+
+proxies:
+    - ip: benxiaohai:1328257811@106.186.18.67:62001
+    - ip: benxiaohai:1328257811@106.186.18.67:62002
+    - ip: benxiaohai:1328257811@106.186.18.67:62003
+    - ip: benxiaohai:1328257811@106.186.18.67:62004
+    - ip: benxiaohai:1328257811@106.186.18.67:62005
+    - ip: benxiaohai:1328257811@106.186.18.67:62006
+    - ip: benxiaohai:1328257811@106.186.18.67:62007
+    - ip: benxiaohai:1328257811@106.186.18.67:62008
+    - ip: benxiaohai:1328257811@106.186.18.67:62009
+    - ip: benxiaohai:1328257811@106.186.18.67:62010
