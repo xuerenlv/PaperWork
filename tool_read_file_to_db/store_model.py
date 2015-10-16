@@ -12,6 +12,9 @@ from mongoengine.connection import connect
 connect("weibo_xhj_zhonggangmaodun", host="114.212.191.119", port=27017)
 
 
+
+
+
 class Single_weibo_store(Document):
     uid = StringField()
     nickname = StringField()
