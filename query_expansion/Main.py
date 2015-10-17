@@ -11,6 +11,7 @@ import traceback
 from store_model import Single_weibo_store
 import datetime
 from datetime import timedelta
+import pprint
 
 reload(sys)  
 sys.setdefaultencoding('utf8')   
@@ -56,8 +57,8 @@ def pre_processing(ori_content):
 
 
 
-#********* 第一个版本 完全按照《Structured event retrival over microblog archives》  ************************************************************
-# 总共632天 每5天作为一个TimeSpan
+#*********    第一个版本 完全按照《Structured event retrival over microblog archives》  *********************************************************
+# 总共632天 每5天作为一个TimeSpan,  242(合并前)->135(合并后)
 
 # data_dic 为 time对象－－》list，里面装的是一条条微博
 # 返回的是 touple对象，(start，end)－－》list，里面装的是一条条微博
@@ -89,18 +90,37 @@ def time_span_setting(data_dic):
             del data_timespan_dic[key]
     return data_timespan_dic
 
+# 对于微博个数小于 5 的timespan，把这个timespan与前面一个相融合
+def merge_timespan(data_timespan_dic):
+    del_key = []
+    for key in data_timespan_dic:
+        if len(data_timespan_dic[key]) <= 5:
+            start, end = key
+            new_key = (start - timedelta(days=5), end - timedelta(days=5))
+            if data_timespan_dic.has_key(new_key):
+                data_timespan_dic[new_key].extend(data_timespan_dic[key])
+                del_key.append(key)
+    for key in data_timespan_dic:
+        if len(data_timespan_dic[key]) <= 5:
+            del_key.append(key)
+    for key in set(del_key):
+        del data_timespan_dic[key]
+    
 
 #*******************************************************************************************************************************************
 
 if __name__ == '__main__':
     data_dic = read_data_from_db()
-    for datetime in data_dic:
-        print len(data_dic[datetime])
+#     for datetime in data_dic:
+#         print len(data_dic[datetime])
     print len(data_dic)  # 总共632天
     
     data_timespan_dic = time_span_setting(data_dic)
+    merge_timespan(data_timespan_dic)
+    
     for datetime in data_timespan_dic:
         print len(data_timespan_dic[datetime])
+#         pprint.pprint(data_timespan_dic[datetime])
     print len(data_timespan_dic)
     
     pass
