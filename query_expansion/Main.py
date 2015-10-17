@@ -12,6 +12,7 @@ from store_model import Single_weibo_store
 import datetime
 from datetime import timedelta
 import pprint
+import jieba
 
 reload(sys)  
 sys.setdefaultencoding('utf8')   
@@ -105,22 +106,44 @@ def merge_timespan(data_timespan_dic):
             del_key.append(key)
     for key in set(del_key):
         del data_timespan_dic[key]
+
+# 进行分词，使用结巴分词
+# 返回的是 touple对象，(start，end)－－》list[list]，里面的list用来存储分词结果
+# 返回在这些微博中的所有词
+def cut_weibo(data_timespan_dic):
+    dic_list = []
+    for key in data_timespan_dic:
+        list_in = []
+        list_in.extend(data_timespan_dic[key])
+        cut_list = []
+        for one_weibo in list_in:
+            cut = jieba.cut(one_weibo)
+            cut_list.append(cut)
+            dic_list.extend(cut)
+        data_timespan_dic[key] = cut_list
+    return set(dic_list)
+
+
+# 计算P（w）
     
 
 #*******************************************************************************************************************************************
 
 if __name__ == '__main__':
     data_dic = read_data_from_db()
-#     for datetime in data_dic:
-#         print len(data_dic[datetime])
-    print len(data_dic)  # 总共632天
-    
     data_timespan_dic = time_span_setting(data_dic)
     merge_timespan(data_timespan_dic)
+    dic_list = cut_weibo(data_timespan_dic)
     
-    for datetime in data_timespan_dic:
-        print len(data_timespan_dic[datetime])
+#     for word in dic_list:
+#         print word
+        
+#     for datetime in data_dic:
+#         print len(data_dic[datetime])
+#     print len(data_dic)  # 总共632天
+#     for datetime in data_timespan_dic:
+#         print len(data_timespan_dic[datetime])
 #         pprint.pprint(data_timespan_dic[datetime])
-    print len(data_timespan_dic)
+#     print len(data_timespan_dic)
     
     pass
