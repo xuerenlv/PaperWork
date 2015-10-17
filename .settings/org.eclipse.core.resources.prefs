@@ -5,4 +5,5 @@ encoding//my_version/craw_page_parse.py=utf-8
 encoding//my_version/craw_page_parse_2.py=utf-8
 encoding//my_version/crawl_comment_from_db.py=utf-8
 encoding//my_version/store_model.py=utf-8
+encoding//query_expansion/Main.py=utf-8
 encoding//tool_read_file_to_db/read_file_to_db.py=utf-8

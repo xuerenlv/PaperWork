@@ -8,7 +8,6 @@ import os
 from store_model import Single_weibo_store
 
 import sys  
-from traitlets.config.application import catch_config_error
 import traceback
 reload(sys)  
 sys.setdefaultencoding('utf8')   
