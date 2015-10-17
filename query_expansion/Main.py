@@ -116,6 +116,7 @@ def cut_weibo(data_timespan_dic):
         list_in = []
         list_in.extend(data_timespan_dic[key])
         cut_list = []
+        data_timespan_dic[key] = []
         for one_weibo in list_in:
             cut = jieba.cut(one_weibo)
             cut_list.append(cut)
@@ -125,7 +126,29 @@ def cut_weibo(data_timespan_dic):
 
 
 # 计算P（w）
-    
+def calculate_p_w(data_timespan_dic, dic_set):
+    p_w_dic = {}
+    K = 5
+    V = 250000
+    total_term_in_microarchive = len(dic_set)
+    dic_list = []
+    for key in data_timespan_dic:
+        for cut_list_in in data_timespan_dic[key]:
+            cut_list = []
+            for word in cut_list_in:
+                print word
+                cut_list.append(word)
+            dic_list.extend(cut_list)
+    print len(dic_list)
+    print len(dic_set)
+    for word in dic_set:
+        count = 0 
+        for in_word in dic_list:
+            if in_word == word:
+                count += 1
+#         p_w_dic[word] = float(count + K) / float(total_term_in_microarchive + K * V)
+        p_w_dic[word] = count
+    return p_w_dic
 
 #*******************************************************************************************************************************************
 
@@ -133,8 +156,11 @@ if __name__ == '__main__':
     data_dic = read_data_from_db()
     data_timespan_dic = time_span_setting(data_dic)
     merge_timespan(data_timespan_dic)
-    dic_list = cut_weibo(data_timespan_dic)
+    dic_set = cut_weibo(data_timespan_dic)
+    p_w_dic = calculate_p_w(data_timespan_dic, dic_set)
     
+#     for word in p_w_dic:
+#         print word, p_w_dic[word] 
 #     for word in dic_list:
 #         print word
         
