@@ -387,6 +387,7 @@ class crawl_set_time_with_keyword_and_nickname(threading.Thread):
     
 
 ## 抓取所有用户，同一个关键词的
+# 这里的keyword是 hashtag
 class crawl_set_time_with_only_keyword(threading.Thread):  
     
     def __init__(self,keyword,start_datetime,end_datetime,thread_name='crawl_set_time_with_only_keyword'):
@@ -504,8 +505,6 @@ class crawl_set_time_with_only_keyword(threading.Thread):
         pass  
     
 ##########################################################################  工具相关    #########################################################################################################################
-
-
 # datetime.datetime(2010, 1, 1)  ---> 20100101
 def datetime_to_str(start_time):
     year = start_time.year
@@ -526,17 +525,6 @@ def datetime_to_str(start_time):
     
     str_re = str_year+str_month+str_day
     return str_re
-
-
-
-
-
-
-
-
-
-
-
 
 
         

@@ -28002,3 +28002,241 @@ INFO:crawl_comment___1 insert to database, success !
 INFO:crawl_comment___1 start to crawl ! http://weibo.cn/comment/A0Xlk042q?rl=1&page=396
 2015-09-22 00:42:58 [schedulerLog][crawl_comment___1-crawl_comment_from_db.py-store_comment_to_db-line:94]
 INFO:crawl_comment___1 insert to database, success !
+2015-10-23 16:50:07 [schedulerLog][新闻晨报_thread-login.py-do_login-line:182]
+DEBUG:redirect failed!
+2015-10-23 16:50:07 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:66]
+WARNING:xuerenlv@163.com--login failed !
+2015-10-23 16:50:08 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126208&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-NTI2NTEzNDM2MA==-1445590208-hk-7DE697FE8FE89C421850B6F739DDC3C4&retcode=0
+2015-10-23 16:50:10 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:yuzt@nlp.nju.edu.cn--login success !
+2015-10-23 16:50:11 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126211&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-MzkxOTU3ODI4OQ==-1445590211-hk-CCEEA161BE049E50C6C0C3BA8EBA5862&retcode=0
+2015-10-23 16:50:12 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:njunlpir@163.com--login success !
+2015-10-23 16:50:12 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126212&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-MTk1OTA3MjMwMA==-1445590212-hk-E1DCC4624DE5F197F480170E6929F55F&retcode=0
+2015-10-23 16:50:13 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:474407250@qq.com--login success !
+2015-10-23 16:50:13 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126213&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-MjM3MjAxNzUwNA==-1445590213-hk-19B7C32534E930C58F2AFEB532DD0ECA&retcode=0
+2015-10-23 16:50:14 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:934193889@qq.com--login success !
+2015-10-23 16:50:15 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126215&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-NTEzNjc3MjYxNw==-1445590215-hk-CA8E9D0DE80B19BB6023EA66CBC694BF&retcode=0
+2015-10-23 16:50:15 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:howardit@126.com--login success !
+2015-10-23 16:50:16 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126216&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-NTE5NTU4Njc3NA==-1445590216-hk-78DEE38E1542D998B232EF421DBE2754&retcode=0
+2015-10-23 16:50:17 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:chengchuan90@yahoo.com--login success !
+2015-10-23 16:50:18 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126218&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-NTE1OTE3Njk5NA==-1445590218-hk-D4EA60772C23071C8C683400ABFDB248&retcode=0
+2015-10-23 16:50:19 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:chengc@nlp.nju.edu.cn--login success !
+2015-10-23 16:50:19 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126219&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-MzI3NTIwODA3NQ==-1445590219-hk-A5B365E1F34F70AE2BE8B499C2FFFC11&retcode=0
+2015-10-23 16:50:20 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:18623548894--login success !
+2015-10-23 16:50:20 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126220&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-MjQ4OTAwNTM2NA==-1445590220-hk-A34886311A1560F2DBD83DE524FD8F5C&retcode=0
+2015-10-23 16:50:21 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:374489786@qq.com--login success !
+2015-10-23 16:50:22 [schedulerLog][新闻晨报_thread-login.py-do_login-line:182]
+DEBUG:redirect failed!
+2015-10-23 16:50:22 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:66]
+WARNING:18204318241--login failed !
+2015-10-23 16:50:22 [schedulerLog][新闻晨报_thread-craw_page_parse.py-crawl-line:317]
+INFO:新闻晨报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=新闻晨报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:50:22 [schedulerLog][南方都市报_thread-craw_page_parse.py-crawl-line:317]
+INFO:南方都市报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=南方都市报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:50:22 [schedulerLog][环球时报_thread-craw_page_parse.py-crawl-line:317]
+INFO:环球时报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=环球时报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:50:22 [schedulerLog][南方日报_thread-craw_page_parse.py-crawl-line:317]
+INFO:南方日报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=南方日报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:50:22 [schedulerLog][广州日报_thread-craw_page_parse.py-crawl-line:317]
+INFO:广州日报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=广州日报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:50:22 [schedulerLog][扬子晚报_thread-craw_page_parse.py-crawl-line:317]
+INFO:扬子晚报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=扬子晚报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:50:22 [schedulerLog][新京报_thread-craw_page_parse.py-crawl-line:317]
+INFO:新京报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=新京报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:50:22 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:317]
+INFO:每日经济新闻_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:50:22 [schedulerLog][楚天都市报_thread-craw_page_parse.py-crawl-line:317]
+INFO:楚天都市报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=楚天都市报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:50:25 [schedulerLog][新闻晨报_thread-craw_page_parse.py-crawl-line:359]
+INFO:新闻晨报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=新闻晨报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:50:25 [schedulerLog][楚天都市报_thread-craw_page_parse.py-crawl-line:359]
+INFO:楚天都市报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=楚天都市报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:50:25 [schedulerLog][南方都市报_thread-craw_page_parse.py-crawl-line:339]
+INFO:南方都市报_thread get nothing, sina does not have ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=南方都市报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:50:25 [schedulerLog][南方都市报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:南方都市报_thread insert to database, success !
+2015-10-23 16:50:25 [schedulerLog][南方日报_thread-loginer.py-del_proxy-line:88]
+WARNING:  --change proxy ! proxy size: 9
+2015-10-23 16:50:26 [schedulerLog][新京报_thread-craw_page_parse.py-crawl-line:359]
+INFO:新京报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=新京报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:50:26 [schedulerLog][新闻晨报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:新闻晨报_thread insert to database, success !
+2015-10-23 16:50:26 [schedulerLog][环球时报_thread-craw_page_parse.py-crawl-line:359]
+INFO:环球时报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=环球时报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:50:26 [schedulerLog][楚天都市报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:楚天都市报_thread insert to database, success !
+2015-10-23 16:50:26 [schedulerLog][新京报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:新京报_thread insert to database, success !
+2015-10-23 16:50:26 [schedulerLog][环球时报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:环球时报_thread insert to database, success !
+2015-10-23 16:51:25 [schedulerLog][南方日报_thread-craw_page_parse.py-crawl-line:328]
+WARNING:南方日报_thread proxy exception , change proxy !
+2015-10-23 16:51:25 [schedulerLog][南方日报_thread-craw_page_parse.py-crawl-line:317]
+INFO:南方日报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=南方日报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:51:25 [schedulerLog][广州日报_thread-craw_page_parse.py-crawl-line:317]
+INFO:广州日报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=广州日报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:51:25 [schedulerLog][扬子晚报_thread-craw_page_parse.py-crawl-line:317]
+INFO:扬子晚报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=扬子晚报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:51:25 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:317]
+INFO:每日经济新闻_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:51:27 [schedulerLog][南方日报_thread-craw_page_parse.py-crawl-line:359]
+INFO:南方日报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=南方日报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:51:27 [schedulerLog][南方日报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:南方日报_thread insert to database, success !
+2015-10-23 16:51:28 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:359]
+INFO:每日经济新闻_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:51:28 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:每日经济新闻_thread insert to database, success !
+2015-10-23 16:51:28 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:317]
+INFO:每日经济新闻_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=2
+2015-10-23 16:51:30 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:359]
+INFO:每日经济新闻_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=2
+2015-10-23 16:51:30 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:每日经济新闻_thread insert to database, success !
+2015-10-23 16:51:30 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:317]
+INFO:每日经济新闻_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=3
+2015-10-23 16:51:31 [schedulerLog][广州日报_thread-craw_page_parse.py-crawl-line:359]
+INFO:广州日报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=广州日报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:51:31 [schedulerLog][扬子晚报_thread-craw_page_parse.py-crawl-line:359]
+INFO:扬子晚报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=扬子晚报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:51:31 [schedulerLog][广州日报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:广州日报_thread insert to database, success !
+2015-10-23 16:51:31 [schedulerLog][扬子晚报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:扬子晚报_thread insert to database, success !
+2015-10-23 16:51:41 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:359]
+INFO:每日经济新闻_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=3
+2015-10-23 16:51:41 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:每日经济新闻_thread insert to database, success !
+2015-10-23 16:51:41 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:317]
+INFO:每日经济新闻_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=4
+2015-10-23 16:51:43 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:359]
+INFO:每日经济新闻_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=4
+2015-10-23 16:51:43 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:每日经济新闻_thread insert to database, success !
+2015-10-23 16:51:43 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:317]
+INFO:每日经济新闻_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=5
+2015-10-23 16:51:45 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:359]
+INFO:每日经济新闻_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=5
+2015-10-23 16:51:45 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:每日经济新闻_thread insert to database, success !
+2015-10-23 16:51:45 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:317]
+INFO:每日经济新闻_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=6
+2015-10-23 16:51:47 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:359]
+INFO:每日经济新闻_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=一带一路&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=6
+2015-10-23 16:51:47 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:每日经济新闻_thread insert to database, success !
+2015-10-23 16:54:29 [schedulerLog][新闻晨报_thread-login.py-do_login-line:182]
+DEBUG:redirect failed!
+2015-10-23 16:54:29 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:66]
+WARNING:xuerenlv@163.com--login failed !
+2015-10-23 16:54:29 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126469&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-NTI2NTEzNDM2MA==-1445590469-hk-A248D43A4FE419791BD67CF647734289&retcode=0
+2015-10-23 16:54:31 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:yuzt@nlp.nju.edu.cn--login success !
+2015-10-23 16:54:31 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126471&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-MzkxOTU3ODI4OQ==-1445590471-hk-BCCDF99CA25F4BF2FC8D656D4C5AD656&retcode=0
+2015-10-23 16:54:33 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:njunlpir@163.com--login success !
+2015-10-23 16:54:33 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126473&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-MTk1OTA3MjMwMA==-1445590473-hk-609AB789E07FDC285875F566AAF10356&retcode=0
+2015-10-23 16:54:34 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:474407250@qq.com--login success !
+2015-10-23 16:54:35 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126475&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-MjM3MjAxNzUwNA==-1445590475-hk-66CDFA864E5A2C94DF8E52F918AC1898&retcode=0
+2015-10-23 16:54:35 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:934193889@qq.com--login success !
+2015-10-23 16:54:36 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126476&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-NTEzNjc3MjYxNw==-1445590476-hk-CC98764BB442E1847FD07200B0703E60&retcode=0
+2015-10-23 16:54:37 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:howardit@126.com--login success !
+2015-10-23 16:54:37 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126477&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-NTE5NTU4Njc3NA==-1445590477-hk-D1E224450FE47790A1936760C6556E35&retcode=0
+2015-10-23 16:54:38 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:chengchuan90@yahoo.com--login success !
+2015-10-23 16:54:38 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126478&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-NTE1OTE3Njk5NA==-1445590478-hk-D5BA6AE67B88E9B14D85454F9A02E58E&retcode=0
+2015-10-23 16:54:39 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:chengc@nlp.nju.edu.cn--login success !
+2015-10-23 16:54:40 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126480&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-MzI3NTIwODA3NQ==-1445590480-hk-08596E35504A25C1AECEB5457396661B&retcode=0
+2015-10-23 16:54:40 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:18623548894--login success !
+2015-10-23 16:54:41 [schedulerLog][新闻晨报_thread-login.py-do_login-line:165]
+DEBUG:http://passport.weibo.com/wbsso/login?ssosavestate=1477126481&url=http%3A%2F%2Fweibo.com%2Fajaxlogin.php%3Fframelogin%3D1%26callback%3Dparent.sinaSSOController.feedBackUrlCallBack&ticket=ST-MjQ4OTAwNTM2NA==-1445590481-hk-2B2ED5518081D77A34FFED209CD6A500&retcode=0
+2015-10-23 16:54:42 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:63]
+INFO:374489786@qq.com--login success !
+2015-10-23 16:54:42 [schedulerLog][新闻晨报_thread-login.py-do_login-line:182]
+DEBUG:redirect failed!
+2015-10-23 16:54:42 [schedulerLog][新闻晨报_thread-loginer.py-fill_cookies_list-line:66]
+WARNING:18204318241--login failed !
+2015-10-23 16:54:42 [schedulerLog][新闻晨报_thread-craw_page_parse.py-crawl-line:317]
+INFO:新闻晨报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=新闻晨报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:42 [schedulerLog][南方都市报_thread-craw_page_parse.py-crawl-line:317]
+INFO:南方都市报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=南方都市报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:42 [schedulerLog][广州日报_thread-craw_page_parse.py-crawl-line:317]
+INFO:广州日报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=广州日报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:42 [schedulerLog][南方日报_thread-craw_page_parse.py-crawl-line:317]
+INFO:南方日报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=南方日报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:42 [schedulerLog][环球时报_thread-craw_page_parse.py-crawl-line:317]
+INFO:环球时报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=环球时报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:42 [schedulerLog][扬子晚报_thread-craw_page_parse.py-crawl-line:317]
+INFO:扬子晚报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=扬子晚报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:42 [schedulerLog][新京报_thread-craw_page_parse.py-crawl-line:317]
+INFO:新京报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=新京报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:42 [schedulerLog][楚天都市报_thread-craw_page_parse.py-crawl-line:317]
+INFO:楚天都市报_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=楚天都市报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:42 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:317]
+INFO:每日经济新闻_thread start to crawl ! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:46 [schedulerLog][新京报_thread-craw_page_parse.py-crawl-line:359]
+INFO:新京报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=新京报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:47 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-crawl-line:359]
+INFO:每日经济新闻_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=每日经济新闻&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:48 [schedulerLog][新闻晨报_thread-craw_page_parse.py-crawl-line:359]
+INFO:新闻晨报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=新闻晨报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:48 [schedulerLog][南方日报_thread-craw_page_parse.py-crawl-line:359]
+INFO:南方日报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=南方日报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:48 [schedulerLog][楚天都市报_thread-craw_page_parse.py-crawl-line:359]
+INFO:楚天都市报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=楚天都市报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:48 [schedulerLog][南方都市报_thread-craw_page_parse.py-crawl-line:359]
+INFO:南方都市报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=南方都市报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:48 [schedulerLog][环球时报_thread-craw_page_parse.py-crawl-line:359]
+INFO:环球时报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=环球时报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:48 [schedulerLog][广州日报_thread-craw_page_parse.py-crawl-line:359]
+INFO:广州日报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=广州日报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:48 [schedulerLog][扬子晚报_thread-craw_page_parse.py-crawl-line:359]
+INFO:扬子晚报_thread crawl success! http://weibo.cn/search/mblog?hideSearchFrame=&keyword=扶老人&advancedfilter=1&hasori=1&nick=扬子晚报&starttime=20110101&endtime=20150906&sort=time&hasv=1&page=1
+2015-10-23 16:54:49 [schedulerLog][每日经济新闻_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:每日经济新闻_thread insert to database, success !
+2015-10-23 16:54:49 [schedulerLog][新京报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:新京报_thread insert to database, success !
+2015-10-23 16:54:49 [schedulerLog][新闻晨报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:新闻晨报_thread insert to database, success !
+2015-10-23 16:54:49 [schedulerLog][楚天都市报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:楚天都市报_thread insert to database, success !
+2015-10-23 16:54:49 [schedulerLog][环球时报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:环球时报_thread insert to database, success !
+2015-10-23 16:54:49 [schedulerLog][广州日报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:广州日报_thread insert to database, success !
+2015-10-23 16:54:49 [schedulerLog][南方日报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:南方日报_thread insert to database, success !
+2015-10-23 16:54:49 [schedulerLog][南方都市报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:南方都市报_thread insert to database, success !
+2015-10-23 16:54:49 [schedulerLog][扬子晚报_thread-craw_page_parse.py-store_weibo_to_db-line:373]
+INFO:扬子晚报_thread insert to database, success !
