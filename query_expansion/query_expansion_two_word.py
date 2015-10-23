@@ -196,20 +196,6 @@ if __name__ == '__main__':
     result_map = calculate_burstiness_score(p_w_dic, data_timespan_dic_p_w_ts)
       
       
-    print_result(result_map)
-    
-#     for word in p_w_dic:
-#         print word, p_w_dic[word] 
-#     print len(p_w_dic)
-#     for word in dic_list:
-#         print word
-        
-#     for datetime in data_dic:
-#         print len(data_dic[datetime])
-#     print len(data_dic)  # 总共632天
-#     for datetime in data_timespan_dic:
-#         print len(data_timespan_dic[datetime])
-#         pprint.pprint(data_timespan_dic[datetime])
-#     print len(data_timespan_dic)
+    print_result(result_map)    
     
     pass

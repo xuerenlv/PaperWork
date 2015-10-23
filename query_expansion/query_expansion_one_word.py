@@ -72,15 +72,15 @@ def time_span_setting(data_dic):
         if largest_time < key:
             largest_time = key
     data_timespan_dic = {}
-    while smallest_time + timedelta(days=49) <= largest_time:
-        key = (smallest_time, smallest_time + timedelta(days=49))
+    while smallest_time + timedelta(days=99) <= largest_time:
+        key = (smallest_time, smallest_time + timedelta(days=99))
         data_timespan_dic[key] = []
-        for i in range(50):
+        for i in range(100):
             if data_dic.has_key(smallest_time + timedelta(days=i)):
                 data_timespan_dic[key].extend(data_dic[smallest_time + timedelta(days=i)])
         if len(data_timespan_dic[key]) == 0:
             del data_timespan_dic[key]
-        smallest_time += timedelta(days=50)
+        smallest_time += timedelta(days=100)
     if smallest_time < largest_time:   
         key = (smallest_time, largest_time)
         data_timespan_dic[key] = []
@@ -112,11 +112,36 @@ def cut_weibo(data_timespan_dic):
         data_timespan_dic_cutted[key] = []
         re_list = data_timespan_dic_cutted[key]
         for one_weibo in data_timespan_dic[key]:
-            cut = [word for word in jieba.cut(one_weibo)]
+            cut = [word for word in cut_filter(jieba.cut(one_weibo))]
             re_list.append(cut)
             dic_list.extend(cut)
     return (data_timespan_dic_cutted, set(dic_list), dic_list)
 
+# 对结巴分词结果进行过滤
+def cut_filter(cut):
+    new_cut = []
+    for word in cut:
+        if is_all_chinese(word):
+            new_cut.append(word)
+    return new_cut
+
+# 判断是不是全部为汉字
+def is_all_chinese(word):
+    for uchar in word:
+        if uchar >= u'\u4e00' and uchar<=u'\u9fa5':
+            pass
+        else:
+            return False
+    return True
+
+# 判断是不是全部为字母
+def is_all_alpha(word):
+    for one in word:
+        if (one >= 'a' and one <= u'z') or (one >= 'A' and one <= u'Z'):
+            pass
+        else:
+            return False
+    return True
 
 # 计算P(w)
 def calculate_p_w(dic_set, dic_list):
@@ -163,7 +188,7 @@ def calculate_p_w_ts(data_timespan_dic_cutted, w_map_count, total_term_in_microa
 def calculate_burstiness_score(p_w_dic, data_timespan_dic_p_w_ts):
     result_map = {}
     for time_span in data_timespan_dic_p_w_ts:
-        result_map[time_span]={}
+        result_map[time_span] = {}
         op = result_map[time_span]
         re_map = data_timespan_dic_p_w_ts[time_span]
         for word in re_map:
@@ -177,7 +202,7 @@ def print_result(result_map):
         keys = re_map.keys()
         keys.sort(lambda x, y:cmp(re_map[y], re_map[x]))
         print "*********************start************************************************"
-        for i in range(10):
+        for i in range(30):
             print keys[i], re_map[keys[i]]
         print "*********************end************************************************"
     pass
