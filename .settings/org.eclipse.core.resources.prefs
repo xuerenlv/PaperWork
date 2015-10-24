@@ -5,6 +5,7 @@ encoding//my_version/config_operation.py=utf-8
 encoding//my_version/craw_page_parse.py=utf-8
 encoding//my_version/craw_page_parse_2.py=utf-8
 encoding//my_version/crawl_comment_from_db.py=utf-8
+encoding//my_version/loginer.py=utf-8
 encoding//my_version/store_model.py=utf-8
 encoding//query_expansion/Main.py=utf-8
 encoding//query_expansion/query_expansion_one_word.py=utf-8

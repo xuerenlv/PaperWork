@@ -27,17 +27,21 @@ except:
     
 
 class Loginer:
+    # 用于存放cookie
     cookies_list = []
     cookies_list_mutex = threading.Lock()
     
+    # 用于存放代理
     proxy_list = []
     proxy_list_mutex = threading.Lock()
-        
+    
+    
     per_proxy_used_most = 0
         
     def __init__(self):
         pass
     
+    # 从存放cookie的文件中获取cookie信息
     def get_cookie_from_file(self, cookie_file):
         cookie = {}
         with open(cookie_file) as f:
@@ -53,6 +57,8 @@ class Loginer:
             cookie[key] = value
         return cookie
 
+
+    # 当 cookies_list 为空的时候，对其进行填充
     def fill_cookies_list(self):
         from config_operation import LOGIN_USER_INFOR as user_info_list
         for login_info in user_info_list:
@@ -66,16 +72,18 @@ class Loginer:
                 WeiboSearchLog().get_scheduler_logger().warning(username + "--login failed !")
         pass
     
+    # 当 proxy_list 为空的时候，对其进行填充
     def fill_proxy_list(self):
         from config_operation import PROXIES as proxy_info_list
         for proxy in proxy_info_list:
             Loginer.proxy_list.append(proxy)
     
+    # 删除 cookie_list 中的一个cookie信息
     def del_cookie(self):
         if len(Loginer.cookies_list) > 0:
             Loginer.cookies_list_mutex.acquire()
             del Loginer.cookies_list[-1]
-            WeiboSearchLog().get_scheduler_logger().warning("  --change cookie ! cookie size: "+str(len(Loginer.cookies_list)))
+            WeiboSearchLog().get_scheduler_logger().warning("  --change cookie ! cookie size: " + str(len(Loginer.cookies_list)))
             time.sleep(int(60))
             Loginer.cookies_list_mutex.release()
     
@@ -85,14 +93,14 @@ class Loginer:
         Loginer.per_proxy_used_most = 0
         if len(Loginer.proxy_list) > 0:
             del Loginer.proxy_list[-1]
-            WeiboSearchLog().get_scheduler_logger().warning("  --change proxy ! proxy size: "+str(len(Loginer.proxy_list)))
+            WeiboSearchLog().get_scheduler_logger().warning("  --change proxy ! proxy size: " + str(len(Loginer.proxy_list)))
             time.sleep(int(60))
         if len(Loginer.proxy_list) == 0:
             self.del_cookie()
             time.sleep(int(60))
         Loginer.proxy_list_mutex.release()
             
-
+    # 获取cookie信息
     def get_cookie(self):
         Loginer.cookies_list_mutex.acquire()
         if len(Loginer.cookies_list) > 0:
@@ -108,6 +116,7 @@ class Loginer:
                 WeiboSearchLog().get_scheduler_logger().error("ALL user login failed,the ip .....")
                 sys.exit(1)
     
+    # 获取代理信息
     def get_proxy(self):
         Loginer.proxy_list_mutex.acquire()
         Loginer.per_proxy_used_most += 1
@@ -124,6 +133,10 @@ class Loginer:
             self.del_proxy()
             
         return re
+            
+            
+            
+            
             
 if __name__ == '__main__':
     loginer = Loginer()
