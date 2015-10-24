@@ -27,6 +27,9 @@ except:
     
 
 class Loginer:
+    # 用于存放 登陆用户 ，username与password
+    username_pawword_list = []
+    
     # 用于存放cookie
     cookies_list = []
     cookies_list_mutex = threading.Lock()
@@ -57,19 +60,32 @@ class Loginer:
             cookie[key] = value
         return cookie
 
+    # 填充 username_pawword_list
+    def fill_username_pawword_list(self):
+        from config_operation import LOGIN_USER_INFOR as user_info_list
+        for login_info in user_info_list:
+            one_user = []
+            one_user.append(login_info['username'])
+            one_user.append(login_info['password'])
+            Loginer.username_pawword_list.append(one_user)
+        pass
 
     # 当 cookies_list 为空的时候，对其进行填充
     def fill_cookies_list(self):
-        from config_operation import LOGIN_USER_INFOR as user_info_list
-        for login_info in user_info_list:
-            username = login_info['username']
-            password = login_info['password']
-            cookie_file = 'cookies/weibo_login_cookies_' + login_info['username'] + '.dat'
-            if do_login(username, password, cookie_file) == 1:
-                WeiboSearchLog().get_scheduler_logger().info(username + "--login success !")
-                Loginer.cookies_list.append(self.get_cookie_from_file(cookie_file))
-            else:
-                WeiboSearchLog().get_scheduler_logger().warning(username + "--login failed !")
+        if len(Loginer.username_pawword_list)==0 :
+            self.fill_username_pawword_list()
+        
+        login_info = Loginer.username_pawword_list[0]
+        username = login_info[0]
+        password = login_info[1]
+        del Loginer.username_pawword_list[0]
+        
+        cookie_file = 'cookies/weibo_login_cookies_' + username + '.dat'
+        if do_login(username, password, cookie_file) == 1:
+            WeiboSearchLog().get_scheduler_logger().info(username + "--login success !")
+            Loginer.cookies_list.append(self.get_cookie_from_file(cookie_file))
+        else:
+            WeiboSearchLog().get_scheduler_logger().warning(username + "--login failed !")
         pass
     
     # 当 proxy_list 为空的时候，对其进行填充
@@ -80,12 +96,12 @@ class Loginer:
     
     # 删除 cookie_list 中的一个cookie信息
     def del_cookie(self):
+        Loginer.cookies_list_mutex.acquire()
         if len(Loginer.cookies_list) > 0:
-            Loginer.cookies_list_mutex.acquire()
             del Loginer.cookies_list[-1]
             WeiboSearchLog().get_scheduler_logger().warning("  --change cookie ! cookie size: " + str(len(Loginer.cookies_list)))
-            time.sleep(int(60))
-            Loginer.cookies_list_mutex.release()
+            time.sleep(int(160))
+        Loginer.cookies_list_mutex.release()
     
     # 抓取失败时，先换proxy，当所有的proxy换完时，换账号
     def del_proxy(self):
@@ -94,10 +110,10 @@ class Loginer:
         if len(Loginer.proxy_list) > 0:
             del Loginer.proxy_list[-1]
             WeiboSearchLog().get_scheduler_logger().warning("  --change proxy ! proxy size: " + str(len(Loginer.proxy_list)))
-            time.sleep(int(60))
+            time.sleep(int(160))
         if len(Loginer.proxy_list) == 0:
             self.del_cookie()
-            time.sleep(int(60))
+            time.sleep(int(160))
         Loginer.proxy_list_mutex.release()
             
     # 获取cookie信息
@@ -129,6 +145,7 @@ class Loginer:
             re = Loginer.proxy_list[-1]
         Loginer.proxy_list_mutex.release()
         
+        #  当一个proxy用了超过100次的时候，删除
         if Loginer.per_proxy_used_most > 100:
             self.del_proxy()
             

@@ -38,8 +38,8 @@ def crawl_real_time_main(key_words_list):
 # 关键词，对应微博很多，按天抓取
 def crawl_set_time_main_many(key_word, start_time, end_time):
     thrads_list = []
-    while start_time + datetime.timedelta(days=90) < end_time:
-        end_2 = start_time + datetime.timedelta(days=90)
+    while start_time + datetime.timedelta(days=30) < end_time:
+        end_2 = start_time + datetime.timedelta(days=30)
         thrads_list.append(crawl_set_time_with_keyword(key_word, start_time, end_2, 'crawl_settime_thread' + str(start_time) + " to " + str(end_2)))
         start_time = end_2
     if start_time < end_time:
@@ -118,9 +118,9 @@ def main_2_just_tran_nickname_to_uidoruname():
 # 对于一个关键词的抓取
 def crawl_one_keyword():
     all_thrads_list = []
-    key_word = '港中矛盾'
-    start_time = datetime.datetime(2015, 1, 1)
-    end_time = datetime.datetime(2015, 9, 6)
+    key_word = '一带一路'
+    start_time = datetime.datetime(2011, 1, 1)
+    end_time = datetime.datetime(2015, 10, 24)
     
     all_thrads_list.extend(crawl_set_time_main_many(key_word, start_time, end_time))
     
@@ -194,7 +194,9 @@ def chuli_nickname_crawl_userinfo():
 
 if __name__ == '__main__':
     
-    crawl_set_user_weibo_about_keyword()
+    crawl_one_keyword()
+    
+#     crawl_set_user_weibo_about_keyword()
     
 #     all_thrads_list = []
 #         
