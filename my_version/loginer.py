@@ -100,7 +100,7 @@ class Loginer:
         if len(Loginer.cookies_list) > 0:
             del Loginer.cookies_list[-1]
             WeiboSearchLog().get_scheduler_logger().warning("  --change cookie ! cookie size: " + str(len(Loginer.cookies_list)))
-            time.sleep(int(160))
+            time.sleep(int(60))
         Loginer.cookies_list_mutex.release()
     
     # 抓取失败时，先换proxy，当所有的proxy换完时，换账号
@@ -110,10 +110,10 @@ class Loginer:
         if len(Loginer.proxy_list) > 0:
             del Loginer.proxy_list[-1]
             WeiboSearchLog().get_scheduler_logger().warning("  --change proxy ! proxy size: " + str(len(Loginer.proxy_list)))
-            time.sleep(int(160))
+            time.sleep(int(60))
         if len(Loginer.proxy_list) == 0:
             self.del_cookie()
-            time.sleep(int(160))
+            time.sleep(int(60))
         Loginer.proxy_list_mutex.release()
             
     # 获取cookie信息

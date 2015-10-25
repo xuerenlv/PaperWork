@@ -118,7 +118,7 @@ def main_2_just_tran_nickname_to_uidoruname():
 # 对于一个关键词的抓取
 def crawl_one_keyword():
     all_thrads_list = []
-    key_word = '一带一路'
+    key_word = '扶老人'
     start_time = datetime.datetime(2011, 1, 1)
     end_time = datetime.datetime(2015, 10, 24)
     
