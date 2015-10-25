@@ -128,7 +128,7 @@ def cut_filter(cut):
 # 判断是不是全部为汉字
 def is_all_chinese(word):
     for uchar in word:
-        if uchar >= u'\u4e00' and uchar<=u'\u9fa5':
+        if uchar >= u'\u4e00' and uchar <= u'\u9fa5':
             pass
         else:
             return False
@@ -195,6 +195,8 @@ def calculate_burstiness_score(p_w_dic, data_timespan_dic_p_w_ts):
             re_map[word] = re_map[word] / p_w_dic[word]
             op[word] = re_map[word]
     return result_map
+
+
 # 输出
 def print_result(result_map):
     for time_span in result_map:
@@ -202,9 +204,22 @@ def print_result(result_map):
         keys = re_map.keys()
         keys.sort(lambda x, y:cmp(re_map[y], re_map[x]))
         print "*********************start************************************************"
-        for i in range(30):
+        for i in range(50):
             print keys[i], re_map[keys[i]]
         print "*********************end************************************************"
+    pass
+
+# 输出到文件中
+def print_result_to_file(result_map):
+    file_w = open('result_one_word.txt', 'a')
+    for time_span in result_map:
+        re_map = result_map[time_span]
+        keys = re_map.keys()
+        keys.sort(lambda x, y:cmp(re_map[y], re_map[x]))
+        file_w.write("*********************start************************************************" + '\n')
+        for i in range(50):
+            file_w.write(str(keys[i]) + "\t" + str(re_map[keys[i]]) + '\n')
+        file_w.write("*********************end************************************************" + '\n')
     pass
     
 #*******************************************************************************************************************************************
@@ -223,6 +238,7 @@ if __name__ == '__main__':
       
       
     print_result(result_map)
+    print_result_to_file(result_map)
     
 #     for word in p_w_dic:
 #         print word, p_w_dic[word] 
