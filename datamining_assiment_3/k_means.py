@@ -39,7 +39,7 @@ def k_means_second_version(file_list, k):
     count = 0
     while not un_changled and count < 20:
         count += 1
-        print count, k_central[0]
+        print count
         central_map_example = {}
         # 对于每一个example，计算其所属的类
         for one_example in file_list:
@@ -67,7 +67,7 @@ def k_means(file_list, k):
     un_changled = False
     while not un_changled:
 #         print len(k_central)
-        print k_central[0]
+#         print k_central[0]
         central_map_example.clear()
         # 对于每一个example，计算其所属的类
         for one_example in file_list:
