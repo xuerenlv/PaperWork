@@ -36,7 +36,7 @@ def read_data_from_db():
 # (2013-01-11 20:34:17)(03月06日)(今天)
 def transform_time(ori_time):
     if u'今天' in ori_time:
-        return datetime.datetime(2015, 9, 7)
+        return datetime.datetime(2015, 10, 30)
     elif not u'月' in ori_time:
         ori_time = (ori_time[:ori_time.find(' ')]).split('-')
         try:
@@ -61,7 +61,7 @@ def pre_processing_content(ori_content):
 
 
 
-#*********    第一个版本 完全按照《Structured event retrival over microblog archives》  *********************************************************
+#*********    第一个版本 完全按照《Structured event retrival over microblog archives》  ******************************** start 1
 # 总共632天 每5天作为一个TimeSpan,  242(合并前)->135(合并后)
 
 # data_dic 为 time对象－－》list，里面装的是一条条微博
@@ -216,38 +216,129 @@ def calculate_burstiness_score(p_w_dic, data_timespan_dic_p_w_ts):
         for word in re_map:
             op[word] = re_map[word] / p_w_dic[word]
     return result_map
+#********************************************************************************************************************  end 1
 
+#############################################################################################  start 2
+# 在第一个版本的基础上，构造 query expansion 为 2 个词的
 
-# 输出
-def print_result(result_map):
+# 对于result——map做过滤操作，只包含分数最大的 num——words 个词
+def filter_result_map(result_map, num_words):
+    new_result_map = {}
     for time_span in result_map:
+        new_result_map[time_span] = {}
+        new_op = new_result_map[time_span]
+        
         re_map = result_map[time_span]
+        keys = re_map.keys()
+        keys.sort(lambda x, y:cmp(re_map[y], re_map[x]))
+        
+        for word in keys[:num_words]:
+            new_op[word] = re_map[word]
+    return new_result_map
+
+
+# 对于 result_map
+def select_2_word_from_result_map(new_result_map, data_timespan_dic_cutted):
+    # 用于存放两个词的
+    new_2_word_result_map = {}
+    for time_span in new_result_map:
+        new_2_word_result_map[time_span] = {}
+        new_re_map = new_2_word_result_map[time_span]
+        
+        # 当前 new_result_map timespan 中所有的词
+        word_map_score = new_result_map[time_span] 
+        words_list = word_map_score.keys()
+        
+        # 对当前timespan中已分词的微博操作
+        for one_weibo_cutted in data_timespan_dic_cutted[time_span]:
+            one_weibo_cutted_set = set(one_weibo_cutted)
+            filtered_one_weibo_cutted_set = filter_first_list_by_second(one_weibo_cutted_set, words_list)
+            
+            word_pair_list = gen_two_word_touple(filtered_one_weibo_cutted_set)
+            for first_word, second_word in word_pair_list:
+                
+                if new_re_map.has_key((first_word, second_word)):
+                    # 每多出现一次，分时在原来的基础上 提升 1.1
+                    new_re_map[(first_word, second_word)] = new_re_map[(first_word, second_word)] * 1.1
+                else:
+                    # 取两个单词的分数之和作为总分数
+                    add_score = word_map_score[first_word] + word_map_score[second_word]
+                    new_re_map[(first_word, second_word)] = add_score
+                
+                
+            
+    return new_2_word_result_map
+
+
+# 返回第一个 list 中的词，当其在第二个list中出现时
+# 同时对第一个 list 中的词做过滤
+def filter_first_list_by_second(first_list, second_list):
+    new_list = []
+    for word in first_list:
+        # 长度为 1 的词不具有代表性，删除
+        if len(word) <= 1:  
+            continue
+        # 微博是有这两个词抓的，不再使用
+        if u'中港' == word or  '矛盾' == word:
+            continue
+        
+        if word in second_list:
+            new_list.append(word)
+    return new_list
+
+# 给出一个词序列，返回两两一起的词组，其中前一个词小于后一个词
+def gen_two_word_touple(words_list):
+    paire_word_list = []
+    for i in range(len(words_list) - 1):
+        first_word = words_list[i]
+        for j in range(i + 1, len(words_list)):
+            second_word = words_list[j]
+            paire_word_list.append(gen_pair(first_word, second_word))
+    return paire_word_list
+
+# 输入两个词，输出词pair，小的在前，打的在后
+def gen_pair(first, second):
+    if compare_two_word(first, second):
+        return (second, first)
+    else:
+        return (first, second)
+
+# 词是有顺序的，对两个词作比较
+# 第一个词 》＝ 第二个词，返回True
+def compare_two_word(first_word, second_word):
+    small_len = len(first_word) if len(first_word) < len(second_word) else len(second_word)
+    for i in range(small_len):
+        if first_word[i] == second_word[i]:
+            continue
+        elif first_word[i] > second_word[i]:
+            return True
+        else:
+            return False
+    if len(first_word) == len(second_word):
+        return True
+    elif len(first_word) > len(second_word):
+        return True
+    else:
+        return False
+
+#############################################################################################   end 2
+
+#--------------------------------------------------------------------------------------------   start 3
+# 输出
+def print_result(new_2_word_result_map):
+    for time_span in result_map:
+        re_map = new_2_word_result_map[time_span]
         keys = re_map.keys()
         keys.sort(lambda x, y:cmp(re_map[y], re_map[x]))
         print "*********************start************************************************"
         for i in range(50):
-            print keys[i], re_map[keys[i]]
+            print keys[i][0], keys[i][1], re_map[keys[i]]
         print "*********************end************************************************"
     pass
-
-# 输出到文件中
-def print_result_to_file(result_map):
-    file_w = open('result_one_word.txt', 'a')
-    for time_span in result_map:
-        re_map = result_map[time_span]
-        keys = re_map.keys()
-        keys.sort(lambda x, y:cmp(re_map[y], re_map[x]))
-        file_w.write("*********************start************************************************" + '\n')
-        for i in range(50):
-            file_w.write(str(keys[i]) + "\t" + str(re_map[keys[i]]) + '\n')
-        file_w.write("*********************end************************************************" + '\n')
-    pass
-    
-#*******************************************************************************************************************************************
-
+#--------------------------------------------------------------------------------------------    end  3    
 if __name__ == '__main__':
     data_dic = read_data_from_db()
-    data_timespan_dic = merge_data_dic(data_dic,99)
+    data_timespan_dic = merge_data_dic(data_dic, 99)
     merge_timespan(data_timespan_dic)
     data_timespan_dic_cutted, dic_set, dic_list = cut_weibo(data_timespan_dic)
     
@@ -256,9 +347,8 @@ if __name__ == '__main__':
      
     result_map = calculate_burstiness_score(p_w_dic, data_timespan_dic_p_w_ts)
       
-      
-    print_result(result_map)
-    print_result_to_file(result_map)
+    new_result_map = filter_result_map(result_map, 800)
+    new_2_word_result_map = select_2_word_from_result_map(new_result_map, data_timespan_dic_cutted)
     
-    
+    print_result(new_2_word_result_map)
     pass

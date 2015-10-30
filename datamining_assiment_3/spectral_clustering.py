@@ -188,15 +188,15 @@ if __name__ == '__main__':
     print purity,gini
     
 #     
-#     print "1a"
-#     file_list, lable_list = read_file("mnist.txt")
-#     print "2a"
-#     W = gen_weighted_matrix(file_list, 9)
-#     print "3a"
-#     central_map_example = spectral_clustering(W, len(file_list), 10)
-#     print "4a"
-#     gen_matrix = gen_confusion_matrix(lable_list, central_map_example, 10)
-#     purity = gen_purity(lable_list, central_map_example, 10, gen_matrix)
-#     gini = gen_gini(lable_list, central_map_example, 10, gen_matrix)
-#     print purity, gini
+    print "1a"
+    file_list, lable_list = read_file("mnist.txt")
+    print "2a"
+    W = gen_weighted_matrix(file_list, 9)
+    print "3a"
+    central_map_example = spectral_clustering(W, len(file_list), 10)
+    print "4a"
+    gen_matrix = gen_confusion_matrix(lable_list, central_map_example, 10)
+    purity = gen_purity(lable_list, central_map_example, 10, gen_matrix)
+    gini = gen_gini(lable_list, central_map_example, 10, gen_matrix)
+    print purity, gini
     pass

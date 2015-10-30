@@ -162,7 +162,7 @@ class crawl_set_time_with_keyword(threading.Thread):
     def init_url_queue(self):
         while self.start_time < self.end_time:
             start_time_str = datetime_to_str(self.start_time)
-            self.start_time=self.start_time+datetime.timedelta(days=10)
+            self.start_time=self.start_time+datetime.timedelta(days=5)
             end_time_str = datetime_to_str(self.start_time)
             url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword='+self.keyword+'&advancedfilter=1&hasori=1&starttime='+start_time_str+'&endtime='+end_time_str+"&sort=time&page=1"
             self.url_queue.put(url)
