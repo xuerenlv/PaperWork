@@ -331,17 +331,29 @@ def compare_two_word(first_word, second_word):
 
 #--------------------------------------------------------------------------------------------   start 3
 # 输出
+# 输出到文件中
 def print_result(new_2_word_result_map):
+    count = 0
     for time_span in result_map:
+        file_w = open("result_three_word_"+str(count)+".txt", 'a')
+        count += 1
+        
         re_map = new_2_word_result_map[time_span]
         keys = re_map.keys()
         keys.sort(lambda x, y:cmp(re_map[y], re_map[x]))
+        
+        file_w.write(str(time_span[0].year)+" "+str(time_span[0].month)+" "+str(time_span[0].day)+"\n")
+        file_w.write(str(time_span[1].year)+" "+str(time_span[1].month)+" "+str(time_span[1].day)+"\n")
+        for i in range(50):
+            file_w.write(str(keys[i][0])+" "+str(keys[i][1])+" "+str(keys[i][2])+ "----" + str(re_map[keys[i]]) + '\n')
+        
         print "*********************start************************************************"
         print "start_time",str(time_span[0]),"  ","end_time",str(time_span[1])
         for i in range(50):
             print keys[i][0], keys[i][1],keys[i][2], re_map[keys[i]]
         print "*********************end************************************************"
     pass
+
 #--------------------------------------------------------------------------------------------    end  3    
 if __name__ == '__main__':
     data_dic = read_data_from_db()

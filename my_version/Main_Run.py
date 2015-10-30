@@ -132,7 +132,7 @@ def crawl_one_keyword():
 
 # 对于hashtag的抓取
 def crawl_hash_tag():
-    all_thrads_list=[]
+    all_thrads_list = []
     key_word = '港中矛盾'
     start_time = datetime.datetime(2015, 1, 1)
     end_time = datetime.datetime(2015, 9, 6)
@@ -146,7 +146,7 @@ def crawl_hash_tag():
 
 # 抓取特定用户下的微博
 def crawl_set_user_weibo_about_keyword():
-    all_thrads_list=[]
+    all_thrads_list = []
     key_word = '扶老人'
     start_time = datetime.datetime(2011, 1, 1)
     end_time = datetime.datetime(2015, 9, 6)
@@ -191,6 +191,24 @@ def chuli_nickname_crawl_userinfo():
     for thread in all_thrads_list:
         thread.join()  
 
+
+###################################################################################### start 1
+# 用query expansion ，抓取相应词语的微博。
+
+# key_word_list : 存放query expansion的keyword
+# start_time : datetime对象，开始时间   end_time ： datetime对象，结束时间
+def crawl_keywords_list(key_word_list, start_time, end_time):
+    all_thrads_list = []
+    
+    for key_word in key_word_list:
+        all_thrads_list.append(crawl_set_time_main_many(key_word, start_time, end_time))
+    
+    for thread in all_thrads_list:
+        thread.start()
+    for thread in all_thrads_list:
+        thread.join()  
+
+###################################################################################### end 1
 
 if __name__ == '__main__':
     
