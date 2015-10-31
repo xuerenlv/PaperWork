@@ -146,7 +146,7 @@ class Loginer:
         Loginer.proxy_list_mutex.release()
         
         #  当一个proxy用了超过100次的时候，删除
-        if Loginer.per_proxy_used_most > 100:
+        if Loginer.per_proxy_used_most > 150:
             self.del_proxy()
             
         return re

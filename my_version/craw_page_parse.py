@@ -162,7 +162,7 @@ class crawl_set_time_with_keyword(threading.Thread):
     def init_url_queue(self):
         while self.start_time < self.end_time:
             start_time_str = datetime_to_str(self.start_time)
-            self.start_time=self.start_time+datetime.timedelta(days=5)
+            self.start_time=self.start_time+datetime.timedelta(days=20)
             end_time_str = datetime_to_str(self.start_time)
             url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword='+self.keyword+'&advancedfilter=1&hasori=1&starttime='+start_time_str+'&endtime='+end_time_str+"&sort=time&page=1"
             self.url_queue.put(url)
@@ -544,7 +544,7 @@ def zero_aviable_check_validity(page):
 def weibo_guangchang_forbidden(page):
     out_soup = BeautifulSoup(page)
     str_pre = u"微博广场"
-    if str_pre in out_soup.title.getText():
+    if out_soup.title is None or str_pre in out_soup.title.getText():
         return True
     return False
 

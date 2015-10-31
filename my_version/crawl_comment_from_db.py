@@ -256,7 +256,7 @@ if __name__ == '__main__':
 #     main_get_userinfo_from_db()
 #     main_getobjects_from_db("apple_phone_single_weibo.txt")
 
-    main_getobjects_from_db("zhong_gang_mao_dun_1026.txt")
+    main_getobjects_from_db("result_three_word_1_weibo.txt")
     
 #     main_get_comment_from_db()
 

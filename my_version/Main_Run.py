@@ -38,8 +38,8 @@ def crawl_real_time_main(key_words_list):
 # 关键词，对应微博很多，按天抓取
 def crawl_set_time_main_many(key_word, start_time, end_time):
     thrads_list = []
-    while start_time + datetime.timedelta(days=100) < end_time:
-        end_2 = start_time + datetime.timedelta(days=100)
+    while start_time + datetime.timedelta(days=110) < end_time:
+        end_2 = start_time + datetime.timedelta(days=110)
         thrads_list.append(crawl_set_time_with_keyword(key_word, start_time, end_2, 'crawl_settime_thread' + str(start_time) + " to " + str(end_2)))
         start_time = end_2
     if start_time < end_time:
@@ -201,18 +201,42 @@ def crawl_keywords_list(key_word_list, start_time, end_time):
     all_thrads_list = []
     
     for key_word in key_word_list:
-        all_thrads_list.append(crawl_set_time_main_many(key_word, start_time, end_time))
+        all_thrads_list.extend(crawl_set_time_main_many(key_word, start_time, end_time))
     
     for thread in all_thrads_list:
         thread.start()
     for thread in all_thrads_list:
         thread.join()  
 
+# 读文件，构造keywordslist
+def gen_keywords_list():
+
+    file_r = open('./query_expansion_three_word/result_three_word_1.txt','r')
+    start_time = ""
+    end_time  = ""
+    count = 1
+    key_words_list = []
+    for line in file_r.readlines():
+        if count == 1:
+            line = line[:-1].split(' ')
+            start_time = datetime.datetime(int(line[0]),int(line[1]),int(line[2]))
+        elif count == 2:
+            line = line[:-1].split(' ')
+            end_time = datetime.datetime(int(line[0]),int(line[1]),int(line[2]))
+        else:
+            key_words_list.append(line[:line.find('-')])  
+        count+=1
+#     print str(start_time),str(end_time)
+#     print len(key_words_list)
+    return (key_words_list,start_time,end_time)
 ###################################################################################### end 1
 
 if __name__ == '__main__':
     
-    crawl_one_keyword()
+    key_words_list,start_time,end_time=gen_keywords_list()
+    crawl_keywords_list(key_words_list, start_time, end_time)
+    
+#     crawl_one_keyword()
     
 #     crawl_set_user_weibo_about_keyword()
     

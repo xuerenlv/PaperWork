@@ -13,13 +13,14 @@ import sys
 # 谱聚类算法主体
 def spectral_clustering(W, num_examples, k):
     # 计算 Laplacian 矩阵
-    D = W.sum(axis=0)
-    L = np.zeros((num_examples, num_examples))
+    D_temp = W.sum(axis=0)
+    D = np.zeros((num_examples, num_examples))
     for i in range(num_examples):
-        L[i][i] = D[i]
-    L = L - W
+        D[i][i] = D_temp[i]
+    
+    L = D - W
     print "aaaaaaaaaaaaaaaaaa"
-    eigenvalue, eigenvector = np.linalg.eig(L)
+    eigenvalue, eigenvector = np.linalg.eig(np.dot(np.linalg.inv(D),L))
     
     print eigenvalue
     print eigenvector
