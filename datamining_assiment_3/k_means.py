@@ -16,6 +16,7 @@ def minmize_objective_function(file_name, loop_time, k):
     result_central_map_example = {}
     obj_func = sys.maxint 
     for i in range(loop_time):
+        print file_name,i,"循环总次数：",loop_time
         this_dist = 0.0
         k_central, central_map_example = k_means_second_version(file_list, k)
         for j in range(k):
@@ -34,12 +35,10 @@ def k_means_second_version(file_list, k):
     # 随机选择 k 个初始 example
     while len(k_central) < k:
         k_central.append(file_list[int(random.random() * len(file_list))])
-    
     un_changled = False
     count = 0
     while not un_changled and count < 20:
         count += 1
-        print count
         central_map_example = {}
         # 对于每一个example，计算其所属的类
         for one_example in file_list:
@@ -63,11 +62,8 @@ def k_means(file_list, k):
     # 随机选择 k 个初始 example
     while len(k_central) < k:
         k_central.append(file_list[int(random.random() * len(file_list))])
-    
     un_changled = False
     while not un_changled:
-#         print len(k_central)
-#         print k_central[0]
         central_map_example.clear()
         # 对于每一个example，计算其所属的类
         for one_example in file_list:
@@ -170,19 +166,16 @@ def gen_gini(file_list, result_central_map_example, cluster_num, gen_matrix):
 
 #****************************************************************************
 
+def k_means_main(file_name,clusters_num,loop_time):
+    file_list, lable_list, result_k_central, result_central_map_example, obj_func = minmize_objective_function(file_name, loop_time, clusters_num)
+    gen_matrix = gen_confusion_matrix(file_list, lable_list, result_central_map_example, clusters_num)
+    print file_name,obj_func
+    purity = gen_purity(file_list, result_central_map_example, clusters_num, gen_matrix)
+    gini = gen_gini(file_list, result_central_map_example, clusters_num, gen_matrix)
+    print file_name,"purity:",purity, "gini:",gini
+
 if __name__ == '__main__':
-    file_list, lable_list, result_k_central, result_central_map_example, obj_func = minmize_objective_function("german.txt", 10, 2)
-    gen_matrix = gen_confusion_matrix(file_list, lable_list, result_central_map_example, 2)
-    print obj_func
-    purity = gen_purity(file_list, result_central_map_example, 2, gen_matrix)
-    gini = gen_gini(file_list, result_central_map_example, 2, gen_matrix)
-    print purity, gini
-     
-     
-    file_list, lable_list, result_k_central, result_central_map_example, obj_func = minmize_objective_function("mnist.txt", 10, 10)
-    gen_matrix = gen_confusion_matrix(file_list, lable_list, result_central_map_example, 10)
-    print obj_func
-    purity = gen_purity(file_list, result_central_map_example, 10, gen_matrix)
-    gini = gen_gini(file_list, result_central_map_example, 10, gen_matrix)
-    print purity, gini
+    k_means_main("german.txt", 2, 20)
+    
+    k_means_main("mnist.txt", 10, 20)
     pass

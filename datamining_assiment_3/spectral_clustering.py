@@ -17,14 +17,8 @@ def spectral_clustering(W, num_examples, k):
     D = np.zeros((num_examples, num_examples))
     for i in range(num_examples):
         D[i][i] = D_temp[i]
-    
     L = D - W
-    print "aaaaaaaaaaaaaaaaaa"
-    eigenvalue, eigenvector = np.linalg.eig(np.dot(np.linalg.inv(D),L))
-    
-    print eigenvalue
-    print eigenvector
-    
+    eigenvalue, eigenvector = np.linalg.eig(L)
     # 选择 k 个最小的特征值，对应的特征向量
     K_smallest_eigenvector = []
     eigenvalue_argsort = eigenvalue.argsort()
@@ -50,7 +44,6 @@ def k_means_second_version(file_list, k):
     count = 0
     while not un_changled and count < 20:
         count += 1
-        print count
         central_map_example = {}
         # 对于每一个example，计算其所属的类
         for index  in range(len(file_list)):
@@ -177,27 +170,24 @@ def read_file(file_name):
         file_list.append([float(one) if not one == '0' else 0.000001  for one in arr_line])
     return (file_list, lable_list)
 
-
+def spectral_main(file_name,n,cluster_nums):
+    file_list, lable_list = read_file(file_name)
+    W = gen_weighted_matrix(file_list, n)
+    central_map_example = spectral_clustering(W, len(file_list), cluster_nums)
+    gen_matrix = gen_confusion_matrix(lable_list, central_map_example, cluster_nums)
+    purity = gen_purity(lable_list, central_map_example, cluster_nums, gen_matrix)
+    gini = gen_gini(lable_list, central_map_example, cluster_nums, gen_matrix)
+    print file_name,'n',n,'purity:',purity,'gini:',gini
+    pass
 
 if __name__ == '__main__':
-    file_list, lable_list = read_file("german.txt")
-    W = gen_weighted_matrix(file_list, 3)
-    central_map_example = spectral_clustering(W, len(file_list), 2)
-    gen_matrix = gen_confusion_matrix(lable_list, central_map_example, 2)
-    purity = gen_purity(lable_list, central_map_example, 2, gen_matrix)
-    gini = gen_gini(lable_list, central_map_example, 2, gen_matrix)
-    print purity,gini
     
-#     
-    print "1a"
-    file_list, lable_list = read_file("mnist.txt")
-    print "2a"
-    W = gen_weighted_matrix(file_list, 9)
-    print "3a"
-    central_map_example = spectral_clustering(W, len(file_list), 10)
-    print "4a"
-    gen_matrix = gen_confusion_matrix(lable_list, central_map_example, 10)
-    purity = gen_purity(lable_list, central_map_example, 10, gen_matrix)
-    gini = gen_gini(lable_list, central_map_example, 10, gen_matrix)
-    print purity, gini
+    spectral_main("german.txt", 3, 2)
+    spectral_main("german.txt", 6, 2)
+    spectral_main("german.txt", 9, 2)
+    
+    spectral_main("mnist.txt", 3, 10)
+    spectral_main("mnist.txt", 6, 10)
+    spectral_main("mnist.txt", 9, 10)
+    
     pass

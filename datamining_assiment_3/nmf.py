@@ -26,22 +26,8 @@ def nmf(file_list, k):
         
         X_V = np.dot(X, V)
         U_VT_V = np.dot(U, np.dot(V.transpose(), V))
-        
-#         if count == 1:
-#             print count,"********************"
-# #             print U,V
-#             print X_V
-#             print count,"********************"
-        
-        m , n = U_VT_V.shape
-        print count,U_VT_V
-        for i in range(m):
-            for j in range(n):
-                if U_VT_V[i][j]==0.0:
-                    print count,i,j
-        
         U = U * X_V / U_VT_V
-        
+
         XT_U = np.dot(X.transpose(), U)
         V_UT_U = np.dot(V, np.dot(U.transpose(), U))
         V = V * XT_U / V_UT_U
@@ -67,7 +53,7 @@ def nmf(file_list, k):
             if V[i][j] > max_val:
                 max_val = V[i][j]
                 restlt_example_map_cluster[i] = j
-    
+
     return restlt_example_map_cluster
 
 # 读文件 生成list［list［］］，里面的list代表文件的一行; list[] 代表第i行所属的类。
@@ -127,18 +113,17 @@ def gen_gini(file_list, lable_list, restlt_example_map_cluster, cluster_num):
     return float(fenzi_sum) / float(len(file_list))
 
 #****************************************************************************
-if __name__ == '__main__':
-    file_list, lable_list = read_file("german.txt")
-    restlt_example_map_cluster = nmf(file_list, 2)
-    purity = gen_purity(file_list, lable_list, restlt_example_map_cluster, 2)
-    gini = gen_gini(file_list, lable_list, restlt_example_map_cluster, 2)
+
+def nmf_main(file_name,cluster_nums):
+    file_list, lable_list = read_file(file_name)
+    restlt_example_map_cluster = nmf(file_list, cluster_nums)
+    purity = gen_purity(file_list, lable_list, restlt_example_map_cluster, cluster_nums)
+    gini = gen_gini(file_list, lable_list, restlt_example_map_cluster, cluster_nums)
        
-    print purity, gini
+    print file_name,'purity:',purity, "gini:",gini
+
+if __name__ == '__main__':
+    nmf_main("german.txt", 2)
     
-    file_list, lable_list = read_file("mnist.txt")
-    restlt_example_map_cluster = nmf(file_list, 10)
-    purity = gen_purity(file_list,lable_list, restlt_example_map_cluster, 10)
-    gini = gen_gini(file_list,lable_list, restlt_example_map_cluster, 10)
-    print purity, gini
-    
+    nmf_main("mnist.txt", 10)
     pass
