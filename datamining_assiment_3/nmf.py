@@ -15,8 +15,6 @@ def nmf(file_list, k):
     # 随机生成初始矩阵
     U = np.random.rand(m_x, k) 
     V = np.random.rand(n_x, k)
-     
-    
     is_convergence = False
     count = 0
     while not is_convergence:

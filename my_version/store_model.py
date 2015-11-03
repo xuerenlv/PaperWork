@@ -19,7 +19,7 @@ sys.setdefaultencoding('utf8')
 
 class SingleWeibo():
     
-    def __init__(self,uid,nickname,is_auth,user_url,weibo_url,content,praise_num,retweet_num,comment_num,creat_time,all_weibo_num):
+    def __init__(self, uid, nickname, is_auth, user_url, weibo_url, content, praise_num, retweet_num, comment_num, creat_time, all_weibo_num):
         self.uid = uid
         self.nickname = nickname
         self.is_auth = is_auth
@@ -35,13 +35,13 @@ class SingleWeibo():
         self.all_weibo_num = all_weibo_num
         
     def to_string(self):
-        return self.uid+'\t'+self.nickname+'\t'+self.is_auth+'\t'+self.weibo_url+'\t'+self.user_url+'\t'+\
-            self.content+'\t'+self.praise_num+'\t'+self.retweet_num+'\t'+self.comment_num+'\t'+self.creat_time+'\t'+self.all_weibo_num
+        return self.uid + '\t' + self.nickname + '\t' + self.is_auth + '\t' + self.weibo_url + '\t' + self.user_url + '\t' + \
+            self.content + '\t' + self.praise_num + '\t' + self.retweet_num + '\t' + self.comment_num + '\t' + self.creat_time + '\t' + self.all_weibo_num
             
 
 class Single_comment():
     
-    def __init__(self,uid,nickname,auth,content,praise_num,creat_time):
+    def __init__(self, uid, nickname, auth, content, praise_num, creat_time):
         self.uid = uid
         self.nickname = nickname
         self.auth = auth
@@ -50,11 +50,11 @@ class Single_comment():
         self.creat_time = creat_time
     
     def to_string(self):
-        return self.uid+'\t'+self.nickname+'\t'+self.auth+'\t'+self.content+'\t'+self.praise_num+'\t'+self.creat_time
+        return self.uid + '\t' + self.nickname + '\t' + self.auth + '\t' + self.content + '\t' + self.praise_num + '\t' + self.creat_time
 
 class UserInfo():
         
-    def __init__(self,uid_or_uname,nickname,is_persion,check_or_not,fensi):
+    def __init__(self, uid_or_uname, nickname, is_persion, check_or_not, fensi):
         self.uid_or_uname = uid_or_uname
         self.nickname = nickname
         self.is_persion = is_persion
@@ -62,12 +62,12 @@ class UserInfo():
         self.fensi = fensi
 
     def to_string(self):
-        return self.uid_or_uname+'\t'+self.nickname+'\t'+self.is_persion+'\t'+self.check_or_not+'\t'+self.fensi
+        return self.uid_or_uname + '\t' + self.nickname + '\t' + self.is_persion + '\t' + self.check_or_not + '\t' + self.fensi
 
 
 class UserInfo_loc():
     
-    def __init__(self,uid,nickname,location,sex,birth,intro,check_or_not,check_info):
+    def __init__(self, uid, nickname, location, sex, birth, intro, check_or_not, check_info):
         self.uid = uid
         self.nickname = nickname
         self.location = location
@@ -79,16 +79,16 @@ class UserInfo_loc():
         pass
     
     def print_self(self):
-        print    "info:"+self.nickname
-        print    "info:"+self.location 
-        print    "info:"+self.sex 
-        print    "info:"+self.birth 
-        print    "info:"+self.intro 
-        print "[是否验证：" + self.check_or_not+"]"
+        print    "info:" + self.nickname
+        print    "info:" + self.location 
+        print    "info:" + self.sex 
+        print    "info:" + self.birth 
+        print    "info:" + self.intro 
+        print "[是否验证：" + self.check_or_not + "]"
 
 
     def to_string(self):
-        return "[昵称：" + self.nickname + "]" + "[所在地：" + self.location + "]" + "[性别：" + self.sex + "]"+ "[是否验证：" + self.check_or_not + "]"+ "[" + self.check_info + "]"+"[生日：" + self.birth + "]"+"[简介：" + self.intro + "]"
+        return "[昵称：" + self.nickname + "]" + "[所在地：" + self.location + "]" + "[性别：" + self.sex + "]" + "[是否验证：" + self.check_or_not + "]" + "[" + self.check_info + "]" + "[生日：" + self.birth + "]" + "[简介：" + self.intro + "]"
 
 
 
@@ -120,10 +120,11 @@ class Single_comment_store(Document):
     auth = StringField()
     content = StringField()
     praise_num = StringField()
-    creat_time= StringField()
+    creat_time = StringField()
         
 
 class Single_weibo_store(Document):
+    meta = {'collection': 'single_weibo_store_three_0'}
     uid = StringField()
     nickname = StringField()
     is_auth = StringField()

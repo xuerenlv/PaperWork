@@ -6,6 +6,7 @@ Created on Oct 16, 2015
 @author: nlp
 '''
 
+
 import sys  
 import traceback
 from store_model import Single_weibo_store
@@ -16,6 +17,14 @@ import jieba
 
 reload(sys)  
 sys.setdefaultencoding('utf8')   
+
+from sklearn import svm
+X = [[0, 0], [1, 1]]
+y = [0, 1]
+clf = svm.SVC(C=1.0, cache_size=200, class_weight=None, coef0=0.0, degree=3,
+gamma=0.0, kernel='rbf', max_iter=-1, probability=False, random_state=None,
+shrinking=True, tol=0.001, verbose=False)
+clf.fit(X, y) 
 
 
 def is_all_chinese(word):

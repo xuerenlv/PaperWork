@@ -208,10 +208,10 @@ def crawl_keywords_list(key_word_list, start_time, end_time):
     for thread in all_thrads_list:
         thread.join()  
 
-# 读文件，构造keywordslist
+# 读文件，构造keywordslist 
 def gen_keywords_list():
-
-    file_r = open('./query_expansion_three_word/result_three_word_1.txt','r')
+    # 已操作文件： 1 
+    file_r = open('./query_expansion_three_word/result_three_word_0.txt','r')
     start_time = ""
     end_time  = ""
     count = 1
