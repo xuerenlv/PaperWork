@@ -146,11 +146,15 @@ def gen_weighted_matrix(file_list, n):
     for i in range(num_examples):
         argsort = W[i].argsort()
         for j in range(num_examples):
-            if argsort[j] <= n:
+            if not i == j and argsort[j] <= n:
+                W[i][j] = 1.0
+            else:
+                W[i][j] = 0.0
+    for i in range(num_examples - 1):
+        for j in range(i + 1, num_examples):
+            if W[i][j] == 1.0 or W[j][i] == 1.0:
                 W[i][j] = 1.0
                 W[j][i] = 1.0
-            elif  not W[i][j] == 1.0:
-                W[i][j] = 0.0
     return W
 
 # 返回 两个example的欧式距离
@@ -170,14 +174,14 @@ def read_file(file_name):
         file_list.append([float(one) if not one == '0' else 0.000001  for one in arr_line])
     return (file_list, lable_list)
 
-def spectral_main(file_name,n,cluster_nums):
+def spectral_main(file_name, n, cluster_nums):
     file_list, lable_list = read_file(file_name)
     W = gen_weighted_matrix(file_list, n)
     central_map_example = spectral_clustering(W, len(file_list), cluster_nums)
     gen_matrix = gen_confusion_matrix(lable_list, central_map_example, cluster_nums)
     purity = gen_purity(lable_list, central_map_example, cluster_nums, gen_matrix)
     gini = gen_gini(lable_list, central_map_example, cluster_nums, gen_matrix)
-    print file_name,'n',n,'purity:',purity,'gini:',gini
+    print file_name, 'n', n, 'purity:', purity, 'gini:', gini
     pass
 
 if __name__ == '__main__':
