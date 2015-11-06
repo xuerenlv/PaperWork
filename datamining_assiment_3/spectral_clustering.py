@@ -19,15 +19,17 @@ def spectral_clustering(W, num_examples, k):
         D[i][i] = D_temp[i]
     L = D - W
     eigenvalue, eigenvector = np.linalg.eig(L)
+
     # 选择 k 个最小的特征值，对应的特征向量
     K_smallest_eigenvector = []
     eigenvalue_argsort = eigenvalue.argsort()
     for i in range(len(eigenvalue_argsort)):
-        if eigenvalue_argsort[i] < k:
+        if eigenvalue_argsort[i] <= k and not eigenvalue_argsort[i] == 0:
             K_smallest_eigenvector.append(eigenvector[i])
 
     # 生成新的 邻接矩阵    
     W_new = np.array(K_smallest_eigenvector).transpose()
+    print W_new.shape
     return k_means_second_version(W_new, k)
     
 
@@ -150,10 +152,7 @@ def gen_weighted_matrix(file_list, n):
                 W[i][j] = 1.0
             else:
                 W[i][j] = 0.0
-    for i in range(num_examples - 1):
-        for j in range(i + 1, num_examples):
-            if W[i][j] == 1.0 or W[j][i] == 1.0:
-                W[i][j] = 1.0
+            if W[i][j] == 1.0:
                 W[j][i] = 1.0
     return W
 
