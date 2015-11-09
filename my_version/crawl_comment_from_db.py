@@ -5,7 +5,7 @@ Created on Sep 2, 2015
 @author: xhj
 '''
 from store_model import Single_weibo_store, Single_comment, Single_comment_store, \
-    UserInfo_store
+    UserInfo_store, Single_weibo_with_more_info_store
 import sys
 import threading
 import Queue
@@ -195,7 +195,7 @@ def read_file_fetch_something(weibo_file_name):
 def main_getobjects_from_db(filename):
     file_w = open(filename, 'a')
     count = 1
-    for entry_s in Single_weibo_store.objects:
+    for entry_s in Single_weibo_with_more_info_store.objects:
         str_s = '[' + "id:" + str(count) + ']'
         str_s += '[' + "uid:" + entry_s['uid'] + ']'
         str_s += '[' + "nickname:" + entry_s['nickname'] + ']'
@@ -256,7 +256,7 @@ if __name__ == '__main__':
 #     main_get_userinfo_from_db()
 #     main_getobjects_from_db("apple_phone_single_weibo.txt")
 
-    main_getobjects_from_db("weibo_from_result_three_word_1.txt")
+    main_getobjects_from_db("fubai_11_07.txt")
     
 #     main_get_comment_from_db()
 

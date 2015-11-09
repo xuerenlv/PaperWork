@@ -33,11 +33,19 @@ def read_data_from_db():
         
         
 # 输入字符串，输出 datetime.datetime 对象
-# (2013-01-11 20:34:17)(03月06日)(今天)
+# (2013-01-11 20:34:17)(03月06日)(今天)(2分钟前 来自iPhone)
 def transform_time(ori_time):
-    if u'今天' in ori_time:
-        return datetime.datetime(2015, 10, 30)
-    elif not u'月' in ori_time:
+#     print ori_time
+    if u'今天' in ori_time or u'分钟前' in ori_time:
+        return datetime.datetime(2015, 11, 07)
+    
+    elif u'月' in ori_time[:10] or u'日' in ori_time[:10]:
+        yue = ori_time[:ori_time.find(u'月')]
+        ri = ori_time[len(yue) + 1:ori_time.find(u'日')]
+#         print yue,ri
+        return datetime.datetime(2015, int(yue), int(ri))
+    
+    else:
         ori_time = (ori_time[:ori_time.find(' ')]).split('-')
         try:
             return datetime.datetime(int(ori_time[0]), int(ori_time[1]), int(ori_time[2]))
@@ -46,10 +54,7 @@ def transform_time(ori_time):
             for i in range(len(ori_time)):
                 print ori_time[i]
             print traceback.format_exc()
-    else:
-        yue = ori_time[:ori_time.find(u'月')]
-        ri = ori_time[len(yue) + 1:ori_time.find(u'日')]
-        return datetime.datetime(2015, int(yue), int(ri))
+    
 
 
 
@@ -335,7 +340,7 @@ def compare_two_word(first_word, second_word):
 def print_result(new_2_word_result_map):
     count = 0
     for time_span in result_map:
-        file_w = open("result_three_word_"+str(count)+".txt", 'a')
+        file_w = open("fubai_result_three_word_"+str(count)+".txt", 'a')
         count += 1
         
         re_map = new_2_word_result_map[time_span]
@@ -344,12 +349,12 @@ def print_result(new_2_word_result_map):
         
         file_w.write(str(time_span[0].year)+" "+str(time_span[0].month)+" "+str(time_span[0].day)+"\n")
         file_w.write(str(time_span[1].year)+" "+str(time_span[1].month)+" "+str(time_span[1].day)+"\n")
-        for i in range(50):
+        for i in range(30):
             file_w.write(str(keys[i][0])+" "+str(keys[i][1])+" "+str(keys[i][2])+ "----" + str(re_map[keys[i]]) + '\n')
         
         print "*********************start************************************************"
         print "start_time",str(time_span[0]),"  ","end_time",str(time_span[1])
-        for i in range(50):
+        for i in range(30):
             print keys[i][0], keys[i][1],keys[i][2], re_map[keys[i]]
         print "*********************end************************************************"
     pass
@@ -357,7 +362,7 @@ def print_result(new_2_word_result_map):
 #--------------------------------------------------------------------------------------------    end  3    
 if __name__ == '__main__':
     data_dic = read_data_from_db()
-    data_timespan_dic = merge_data_dic(data_dic, 99)
+    data_timespan_dic = merge_data_dic(data_dic, 29)
     data_timespan_dic_cutted, dic_set, dic_list = cut_weibo(data_timespan_dic)
     
     p_w_dic, w_map_count , total_term_in_microarchive = calculate_p_w(dic_set, dic_list)

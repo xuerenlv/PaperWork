@@ -9,7 +9,7 @@ from mongoengine.connection import connect
 
 
 
-connect("weibo_xhj_zhonggangmaodun", host="114.212.191.119", port=27017)
+connect("weibo_xhj_fubai_11_07", host="114.212.191.119", port=27017)
 
 
 
