@@ -8,6 +8,7 @@ Created on Nov 12, 2015
 import numpy as np
 import random
 import matplotlib.pyplot as plt
+import math
 
 # Pegasos algorithm 按照要求，训练出10个 w
 def Pegasos_algorithm(file_list, lable_list, lamda):
@@ -20,10 +21,10 @@ def Pegasos_algorithm(file_list, lable_list, lamda):
         it = int(random.uniform(0, m))
         Xit = np.array(file_list[it])
         nt = 1.0 / float(lamda * iteration)
-        if lable_list[it] * np.dot(Xit.transpose(), w) < 1:
-            w = (1 - nt * lamda) * w + nt * lable_list[it] * Xit
-        else:
-            w = (1 - nt * lamda) * w
+        try:
+            w = (1 - nt * lamda) * w - (lable_list[it]/float(1+math.exp(lable_list[it] * np.dot(Xit.transpose(), w))))*Xit
+        except OverflowError:
+            w = (1 - nt * lamda) * w - (lable_list[it]/float(1+1))*Xit
         if int(iteration) in w_t_index:
             w_list.append(w)
             
@@ -66,8 +67,7 @@ if __name__ == '__main__':
     
     print w_t_index
     print right_rate_list
-    
-    plt.figure(num='Hinge Loss Result',figsize=(20,8))
+    plt.figure(num='Log Loss Result',figsize=(20,8))
     plt.subplot(1, 2, 1)
     plt.plot(w_t_index, right_rate_list, 'r', linewidth=2.5, linestyle="-", label="dataset1-a8a")
     
@@ -80,17 +80,15 @@ if __name__ == '__main__':
     plt.legend(loc='upper right', frameon=False)
     
     
-#     plt.show()
-    
-    
     ## *******************************************************************************************
     a9a_training_file_list, a9a_training_lable_list = read_file("dataset1-a9a-training.txt")
     a9a_testing_file_list, a9a_testing_lable_list = read_file("dataset1-a9a-testing.txt")
     w_list, w_t_index = Pegasos_algorithm(a9a_training_file_list, a9a_training_lable_list, 0.00005)
     right_rate_list = predict(a9a_testing_file_list, a9a_testing_lable_list, w_list)
-     
+    
     print w_t_index
     print right_rate_list
+    
     plt.subplot(1, 2, 2)
     plt.plot(w_t_index, right_rate_list, 'b', linewidth=2.5, linestyle="-", label="dataset2-a9a")
     
@@ -102,7 +100,6 @@ if __name__ == '__main__':
     plt.ylabel("test error")
     plt.legend(loc='upper right', frameon=False)
     
-    
     plt.show()
-#     
+    
     pass
