@@ -24,10 +24,9 @@ def Pegasos_algorithm(file_list, lable_list, lamda):
         try:
             w = (1 - nt * lamda) * w - (lable_list[it]/float(1+math.exp(lable_list[it] * np.dot(Xit.transpose(), w))))*Xit
         except OverflowError:
-            w = (1 - nt * lamda) * w - (lable_list[it]/float(1+1))*Xit
+            w = (1 - nt * lamda) * w
         if int(iteration) in w_t_index:
             w_list.append(w)
-            
     return (w_list, w_t_index)
 
 
@@ -36,6 +35,7 @@ def Pegasos_algorithm(file_list, lable_list, lamda):
 def predict(file_list, lable_list, w_list):
     right_rate_list = []
     for w in w_list:
+       
         count_right = 0
         for index in xrange(len(file_list)):
             one_line = np.array(file_list[index])
@@ -43,6 +43,7 @@ def predict(file_list, lable_list, w_list):
                 count_right += 1
             if np.dot(one_line.transpose(), w) < 0 and lable_list[index] < 0:
                 count_right += 1
+        print w,count_right
         right_rate_list.append(1.0 - (float(count_right) / len(file_list)))
     return right_rate_list
 
@@ -64,6 +65,7 @@ if __name__ == '__main__':
     a8a_testing_file_list, a8a_testing_lable_list = read_file("dataset1-a8a-testing.txt")
     w_list, w_t_index = Pegasos_algorithm(a8a_training_file_list, a8a_training_lable_list, 0.0001)
     right_rate_list = predict(a8a_testing_file_list, a8a_testing_lable_list, w_list)
+    
     
     print w_t_index
     print right_rate_list
