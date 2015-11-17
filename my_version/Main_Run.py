@@ -133,10 +133,19 @@ def crawl_one_keyword():
 # 对于hashtag的抓取
 def crawl_hash_tag():
     all_thrads_list = []
-    key_word = '港中矛盾'
+    key_word = '转基因'
     start_time = datetime.datetime(2015, 1, 1)
-    end_time = datetime.datetime(2015, 9, 6)
-    all_thrads_list.append(crawl_set_time_with_only_keyword(key_word, start_time, end_time,))
+    end_time = datetime.datetime(2015, 11, 1)
+#     all_thrads_list.append((key_word, start_time, end_time,))
+    
+    how_many_days_one_thread = 15
+    while start_time + datetime.timedelta(days=how_many_days_one_thread) < end_time:
+        end_2 = start_time + datetime.timedelta(days=how_many_days_one_thread)
+        all_thrads_list.append(crawl_set_time_with_only_keyword(key_word, start_time, end_2, 'crawl_settime_thread' + str(start_time) + " to " + str(end_2)))
+        start_time = end_2
+    if start_time < end_time:
+        all_thrads_list.append(crawl_set_time_with_only_keyword(key_word, start_time, end_time, 'crawl_settime_thread' + str(start_time) + " to " + str(end_time)))
+   
     
     for thread in all_thrads_list:
         thread.start()
@@ -236,7 +245,9 @@ if __name__ == '__main__':
 #     key_words_list,start_time,end_time=gen_keywords_list()
 #     crawl_keywords_list(key_words_list, start_time, end_time)
     
-    crawl_one_keyword()
+#     crawl_one_keyword()
+    
+    crawl_hash_tag()
     
 #     crawl_set_user_weibo_about_keyword()
     

@@ -24,6 +24,7 @@ from store_model import Single_weibo_store, SingleWeibo_with_more_info, \
     Single_weibo_with_more_info_store
 from mongoengine.errors import NotUniqueError
 import random
+from requests.exceptions import ReadTimeout
 reload(sys)  
 sys.setdefaultencoding('utf8')   
 
@@ -453,9 +454,18 @@ class crawl_set_time_with_only_keyword(threading.Thread):
         WeiboSearchLog().get_scheduler_logger().info(self.name + " start to crawl ! " + url)
         
         weibo_list = []
+        page = ""
         try:
             page = craw_object.get_page()
-            weibo_list = page_parser_from_search(page)
+            
+            # 原始的
+#             weibo_list = page_parser_from_search(page)
+            weibo_list = page_parser_from_search_with_more_info(page)
+
+        except ReadTimeout:
+            self.url_queue.put(url)
+            pass
+        
         except:
             print traceback.format_exc()
             crawl_set_time_with_keyword.del_proxy_lock.acquire()
@@ -469,8 +479,9 @@ class crawl_set_time_with_only_keyword(threading.Thread):
                 self.second_url_queue.put(url)
                 return weibo_list
         
-        
         if len(weibo_list) == 0:
+            if len(page) == 0:
+                return weibo_list
             if zero_aviable_check_validity(page):
                 WeiboSearchLog().get_scheduler_logger().info(self.name + " get nothing, sina does not have ! " + url)
                 return weibo_list
@@ -498,7 +509,20 @@ class crawl_set_time_with_only_keyword(threading.Thread):
     # 将微博存储到数据库中
     def store_weibo_to_db(self, weibo_list):
         for weibo in weibo_list:
-            unique_single = Single_weibo_store(uid=weibo.uid, nickname=weibo.nickname, is_auth=weibo.is_auth, user_url=weibo.user_url, weibo_url=weibo.weibo_url, content=weibo.content, praise_num=weibo.praise_num, retweet_num=weibo.retweet_num, comment_num=weibo.comment_num, creat_time=weibo.creat_time, all_weibo_num=weibo.all_weibo_num)
+            # 原始的
+#             unique_single = Single_weibo_store(uid=weibo.uid, nickname=weibo.nickname, is_auth=weibo.is_auth, user_url=weibo.user_url, weibo_url=weibo.weibo_url, content=weibo.content, praise_num=weibo.praise_num, retweet_num=weibo.retweet_num, comment_num=weibo.comment_num, creat_time=weibo.creat_time, all_weibo_num=weibo.all_weibo_num)
+            unique_single = Single_weibo_with_more_info_store(uid=weibo.uid, nickname=weibo.nickname, is_auth=weibo.is_auth, user_url=
+                                               weibo.user_url, weibo_url=weibo.weibo_url, content=weibo.content, praise_num=weibo.praise_num,
+                                                retweet_num=weibo.retweet_num, comment_num=weibo.comment_num,
+                                                creat_time=weibo.creat_time, all_weibo_num=weibo.all_weibo_num,
+                                                come_from_nickname=weibo.come_from_nickname, come_from_url=weibo.come_from_url,
+                                                come_from_user_is_V=weibo.come_from_user_is_V, at_info=weibo.at_info,
+                                                hash_info=weibo.hash_info,
+                                                original_retweet_num=weibo.original_retweet_num,
+                                                original_praise_num=weibo.original_praise_num,
+                                                original_comment_num=weibo.original_comment_num,
+                                                retweet_reason=weibo.retweet_reason
+                                                )
             try:
                 unique_single.save()
             except NotUniqueError:
@@ -578,7 +602,7 @@ def page_parser_from_search(page):
         
         # 获取 总条数
         all_weibo_num_span = div_one.find('span', attrs={'class':'cmt'}) 
-        if all_weibo_num_span is not None and u'共' in all_weibo_num_span.getText() and u'条' in all_weibo_num_span.getText() and len(all_weibo_num)==0:
+        if all_weibo_num_span is not None and u'共' in all_weibo_num_span.getText() and u'条' in all_weibo_num_span.getText() and len(all_weibo_num) == 0:
             all_weibo_num = all_weibo_num_span.getText()
         
         # 获取单个微博信息
@@ -630,7 +654,7 @@ def page_parser_from_search_with_more_info(page):
         
         # 获取 总条数
         all_weibo_num_span = div_one.find('span', attrs={'class':'cmt'}) 
-        if all_weibo_num_span is not None and u'共' in all_weibo_num_span.getText() and u'条' in all_weibo_num_span.getText() and len(all_weibo_num)==0:
+        if all_weibo_num_span is not None and u'共' in all_weibo_num_span.getText() and u'条' in all_weibo_num_span.getText() and len(all_weibo_num) == 0:
             all_weibo_num = all_weibo_num_span.getText()
         
         # 获取单个微博信息
