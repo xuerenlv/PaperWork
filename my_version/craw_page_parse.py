@@ -53,7 +53,9 @@ class Crawler_with_proxy:
         
         HTTP_HEADERS = {'User-Agent':'Mozilla/5.0 (X11; Linux i686; rv:8.0) Gecko/20100101 Firefox/8.0', 'Accept-encoding':'gzip'}
         HTTP_HEADERS['User-Agent'] = user_agent_list[int(random.random() * len(user_agent_list))]
-        reponse_raw = requests.get(self.url, cookies=self.cookie, proxies=proxies, headers=HTTP_HEADERS)
+        
+        reponse_raw = requests.get(self.url, cookies=self.cookie, proxies=proxies, headers=HTTP_HEADERS, timeout=10)
+        
         if reponse_raw.headers['content-type'] == 'gzip':
             buf = StringIO(reponse_raw.text)
             f = gzip.GzipFile(fileobj=buf)
@@ -419,12 +421,24 @@ class crawl_set_time_with_only_keyword(threading.Thread):
         self.second_url_queue = Queue() 
         pass
     
-    def init_url_queue(self):
-        start_time_str = datetime_to_str(self.start_time)
-        end_time_str = datetime_to_str(self.end_time)
-        # %23 hashtag
-        url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&hasori=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
-        self.url_queue.put(url)
+    def init_url_queue(self):        
+        while self.start_time < self.end_time:
+            start_time_str = datetime_to_str(self.start_time)
+            self.start_time = self.start_time + datetime.timedelta(days=1)
+            end_time_str = datetime_to_str(self.start_time)            
+            # 所有的都抓，不只抓原创的
+            url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+            self.url_queue.put(url)
+            pass
+#         
+#         while self.start_time < self.end_time:
+#             end_time_str = datetime_to_str(self.end_time)
+#             self.end_time = self.end_time - datetime.timedelta(days=1)
+#             start_time_str = datetime_to_str(self.end_time)            
+#             # 所有的都抓，不只抓原创的
+#             url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+#             self.url_queue.put(url)
+#             pass
         pass
     
     # 通过第一天抓的页面，分析出的总条数，填充其后的页面，最多100个页面
@@ -436,8 +450,9 @@ class crawl_set_time_with_only_keyword(threading.Thread):
         if int_total_num >= 1000:
             total_page = 100
         else:
-            total_page = int_total_num / 10
-            
+            total_page = int_total_num / 10 if int_total_num % 10 == 0  else int_total_num / 10 + 1
+        
+#         print 'page: ', int_total_num, total_page    
         for i in range(total_page):
             if i > 1:
                 url = first_page_url[0:-1] + str(i)
@@ -445,7 +460,7 @@ class crawl_set_time_with_only_keyword(threading.Thread):
         pass
     
     # 抓取并解析页面
-    def crawl(self, url, is_again=True):
+    def crawl(self, url, is_again=False):
         loginer = Loginer()
         cookie = loginer.get_cookie()
         proxy = loginer.get_proxy()
@@ -463,7 +478,7 @@ class crawl_set_time_with_only_keyword(threading.Thread):
             weibo_list = page_parser_from_search_with_more_info(page)
 
         except ReadTimeout:
-            self.url_queue.put(url)
+            self.second_url_queue.put(url)
             pass
         
         except:
@@ -478,6 +493,7 @@ class crawl_set_time_with_only_keyword(threading.Thread):
             else:
                 self.second_url_queue.put(url)
                 return weibo_list
+            
         
         if len(weibo_list) == 0:
             if len(page) == 0:
@@ -689,8 +705,8 @@ def page_parser_from_search_with_more_info(page):
                 if u'@' in a_html_text:
                     at_info_list.append(str(a_html.attrs['href']) + ":" + a_html_text)
             
-            hash_tag_info = ' '.join(hash_tag_list)
-            at_info = ' '.join(at_info_list)
+            hash_tag_info = '[xhj_fenge]'.join(hash_tag_list)
+            at_info = '[xhj_fenge]'.join(at_info_list)
             #*********************************************************************
             
             is_auth = ''   

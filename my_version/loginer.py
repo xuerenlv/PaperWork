@@ -106,6 +106,9 @@ class Loginer:
     # 抓取失败时，先换proxy，当所有的proxy换完时，换账号
     def del_proxy(self):
         Loginer.proxy_list_mutex.acquire()
+        if Loginer.per_proxy_used_most<150: ##一个代理没有使用150次，不可以进行删除
+            Loginer.proxy_list_mutex.release()
+            return
         Loginer.per_proxy_used_most = 0
         if len(Loginer.proxy_list) > 0:
             del Loginer.proxy_list[-1]
@@ -146,7 +149,7 @@ class Loginer:
         Loginer.proxy_list_mutex.release()
         
         #  当一个proxy用了超过100次的时候，删除
-        if Loginer.per_proxy_used_most > 150:
+        if Loginer.per_proxy_used_most > 200:
             self.del_proxy()
             
         return re

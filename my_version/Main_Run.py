@@ -134,11 +134,11 @@ def crawl_one_keyword():
 def crawl_hash_tag():
     all_thrads_list = []
     key_word = '转基因'
-    start_time = datetime.datetime(2015, 1, 1)
-    end_time = datetime.datetime(2015, 11, 1)
+    start_time = datetime.datetime(2013, 12, 1)
+    end_time = datetime.datetime(2014, 1, 1) 
 #     all_thrads_list.append((key_word, start_time, end_time,))
     
-    how_many_days_one_thread = 15
+    how_many_days_one_thread = 5
     while start_time + datetime.timedelta(days=how_many_days_one_thread) < end_time:
         end_2 = start_time + datetime.timedelta(days=how_many_days_one_thread)
         all_thrads_list.append(crawl_set_time_with_only_keyword(key_word, start_time, end_2, 'crawl_settime_thread' + str(start_time) + " to " + str(end_2)))
