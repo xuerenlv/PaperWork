@@ -2,12 +2,13 @@
 '''
 Created on Dec 3, 2015
 
-@author: nlp
+@author: xhj
 '''
 
 import random
 from decision_tree_c4_5_main import read_file, fenge_file_for_validation,\
     calc_data_set_empirical_entropy, calc_info_gain_ratio
+import math
 
 # 随机森林
 class RandomForest:
@@ -105,7 +106,7 @@ class RandomForest:
 def chuli_file(file_name , t, m):    
     file_list, lable_list, feature_is_discrete = read_file(file_name)
     fenge = fenge_file_for_validation(file_list, lable_list, 10)
-    total_precision = 0.0
+    pre_all = []
     for one_fenge in fenge:
         
         data_list = one_fenge[2]
@@ -134,18 +135,20 @@ def chuli_file(file_name , t, m):
             if predict_re == one_fenge[1][i]:
                 count += 1.0
         pre = count / len(one_fenge[0])
-        total_precision += pre
+        pre_all.append(pre)
         print 'precision :', pre
-    print 'mean precision :', total_precision / 10
+    mean_pre = sum(pre_all) / 10.0
+    print 'mean precision      :', mean_pre
+    print 'standard deviation  :',math.sqrt(sum([(w-mean_pre)**2 for w in pre_all]))
     pass
 
 
                                                            
 if __name__ == '__main__':
     print "处理文件   breast-cancer-assignment5.txt ，分成10分，9分用于训练，一份用于测试"
-    chuli_file('breast-cancer-assignment5.txt',5,15)
+    chuli_file('breast-cancer-assignment5.txt',20,15)
     print "处理文件   german-assignment5.txt ，分成10分，9分用于训练，一份用于测试"
-    chuli_file('german-assignment5.txt',5,15)
+    chuli_file('german-assignment5.txt',20,15)
     pass
 
 

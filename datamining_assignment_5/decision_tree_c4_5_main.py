@@ -246,7 +246,7 @@ def fenge_file_for_validation(file_list, lable_list, validation_num):
 def chuli_file(file_name):    
     file_list, lable_list, feature_is_discrete = read_file(file_name)
     fenge = fenge_file_for_validation(file_list, lable_list, 10)
-    total_precision = 0.0
+    pre_all = []
     for one_fenge in fenge:
         decision_tree_obj = DecisionTree(one_fenge[2], one_fenge[3], feature_is_discrete, [])
         while decision_tree_obj.decision_tree_prnuing():  # 对决策树进行减枝
@@ -256,9 +256,11 @@ def chuli_file(file_name):
             if decision_tree_obj.predict(one_fenge[0][i]) == one_fenge[1][i]:
                 count += 1.0
         pre = count / len(one_fenge[0])
-        total_precision += pre
+        pre_all.append(pre)
         print 'precision :', pre
-    print 'mean precision :', total_precision / 10
+    mean_pre = sum(pre_all) / 10.0
+    print 'mean precision      :', mean_pre
+    print 'standard deviation  :',math.sqrt(sum([(w-mean_pre)**2 for w in pre_all]))
     pass
 
 
