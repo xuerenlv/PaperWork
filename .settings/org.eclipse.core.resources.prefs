@@ -21,6 +21,7 @@ encoding//my_version/crawl_comment_from_db.py=utf-8
 encoding//my_version/login.py=utf8
 encoding//my_version/loginer.py=utf-8
 encoding//my_version/store_model.py=utf-8
+encoding//my_version/utils_no_crwal.py=utf-8
 encoding//original_version/main_entry.py=utf-8
 encoding//query_expansion/Main.py=utf-8
 encoding//query_expansion/query_expansion_one_word.py=utf-8

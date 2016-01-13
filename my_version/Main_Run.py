@@ -11,10 +11,11 @@ from craw_page_parse import crawl_real_time_with_keyword, \
 import os
 import logging.config
 import datetime
-from crawl_comment_from_db import read_file_fetch_something, crawl_comment
+from crawl_comment_from_db import crawl_comment
 from itertools import count
 from craw_page_parse_2 import crawl_uid_from_nickname, \
     crawl_userinfo_from_uname_or_uid, crawl_userinfo_2_from_uid
+from utils_no_crwal import read_file_fetch_something
 
 if not os.path.exists('logs/'):
     os.mkdir('logs')
@@ -27,7 +28,7 @@ if not os.path.exists('cookies/'):
     os.mkdir('cookies')
 
 
-# 返回创建好的thread
+# 抓取实时的微博，现在还不需要
 def crawl_real_time_main(key_words_list):
     thrads_list = []
     for i in range(len(key_words_list)):
@@ -36,7 +37,7 @@ def crawl_real_time_main(key_words_list):
 
 # 按照天数，分别创建开始url  
 # 关键词，对应微博很多，按天抓取
-def crawl_set_time_main_many(key_word, start_time, end_time,how_many_days_one_thread):
+def crawl_set_time_main_many(key_word, start_time, end_time, how_many_days_one_thread):
     thrads_list = []
     while start_time + datetime.timedelta(days=how_many_days_one_thread) < end_time:
         end_2 = start_time + datetime.timedelta(days=how_many_days_one_thread)
@@ -51,10 +52,8 @@ def crawl_set_time_main_many(key_word, start_time, end_time,how_many_days_one_th
 # 给定： 关键词，开始时间，结束时间，用户list
 def crawl_set_time_main_little(key_word, start_time, end_time, nickname_list):
     thrads_list = []
-    
     for nickname in nickname_list:
         thrads_list.append(crawl_set_time_with_keyword_and_nickname(key_word, start_time, end_time, nickname, nickname + "_thread"))
-    
     return thrads_list
     
 
@@ -87,73 +86,38 @@ def crawl_comment_from_fie(weibo_file_name):
     return all_thrads_list
     
 
-# 通过抓取页面，把nickname转换成uid或者在微博的标示
-def main_2_just_tran_nickname_to_uidoruname():
-    file_r = open("100_atname_file.txt", 'r')
-    
-    nickname_list = []
-    for line in file_r.readlines():
-        op_nickname = line[line.find('nickname:'):]
-        nickname = op_nickname[op_nickname.find(':') + 1:op_nickname.rfind(']')]
-        nickname_list.append(nickname)
-    
-    all_thrads_list = []
-    start = 0
-    end = 10
-    count = 1
-    while end < len(nickname_list):
-        all_thrads_list.append(crawl_uid_from_nickname(nickname_list[start:end], "crawl_uid_from_nickname_" + str(count)))
-        start += 10
-        end += 10
-        count += 1
-    if(start < len(nickname_list)):
-        all_thrads_list.append(crawl_uid_from_nickname(nickname_list[start:len(nickname_list)], "crawl_uid_from_nickname_" + str(count)))
-    
-    for thread in all_thrads_list:
-        thread.start()
-    for thread in all_thrads_list:
-        thread.join()  
-    pass
-
-# 对于一个关键词的抓取
+# 抓取一个关键词下所有的微博
 def crawl_one_keyword():
     all_thrads_list = []
     key_word = '腐败'
     start_time = datetime.datetime(2013, 1, 1)
-    end_time = datetime.datetime(2015, 11, 1)
-    
-    all_thrads_list.extend(crawl_set_time_main_many(key_word, start_time, end_time,30))
-    
+    end_time = datetime.datetime(2015, 11, 1)    
+    all_thrads_list.extend(crawl_set_time_main_many(key_word, start_time, end_time, 30))    
     for thread in all_thrads_list:
         thread.start()
     for thread in all_thrads_list:
         thread.join() 
-    pass    
 
-# 对于hashtag的抓取
+# 抓取一个 hashtag 下所有的微博
 def crawl_hash_tag():
     all_thrads_list = []
     key_word = 'climatechange'
     start_time = datetime.datetime(2015, 9, 17)
     end_time = datetime.datetime(2015, 12, 31) 
-#     all_thrads_list.append((key_word, start_time, end_time,))
-    
+
     how_many_days_one_thread = 15
     while start_time + datetime.timedelta(days=how_many_days_one_thread) < end_time:
         end_2 = start_time + datetime.timedelta(days=how_many_days_one_thread)
         all_thrads_list.append(crawl_set_time_with_only_keyword(key_word, start_time, end_2, 'crawl_settime_thread' + str(start_time) + " to " + str(end_2)))
         start_time = end_2
     if start_time < end_time:
-        all_thrads_list.append(crawl_set_time_with_only_keyword(key_word, start_time, end_time, 'crawl_settime_thread' + str(start_time) + " to " + str(end_time)))
-   
-    
+        all_thrads_list.append(crawl_set_time_with_only_keyword(key_word, start_time, end_time, 'crawl_settime_thread' + str(start_time) + " to " + str(end_time)))    
     for thread in all_thrads_list:
         thread.start()
     for thread in all_thrads_list:
         thread.join()    
-    pass
 
-# 抓取特定用户下的微博
+# 抓取特定用户下的微博，抓取特别媒体关于末个关键词的微博
 def crawl_set_user_weibo_about_keyword():
     all_thrads_list = []
     key_word = '扶老人'
@@ -165,16 +129,14 @@ def crawl_set_user_weibo_about_keyword():
         thread.start()
     for thread in all_thrads_list:
         thread.join() 
-    pass
 
-# 通过用户的uid来抓取用户信息
+# 通过用户的uid来抓取用户信息，，抓取任务中的一个需要
 def chuli_nickname_crawl_userinfo():
     uid_or_uname_list = []
    
     file_r_1 = open("uid_need_to_fetch.txt", 'r')
     for line in file_r_1.readlines():
         uid = line[0:-1]
-#        print uid
         uid_or_uname_list.append(uid)
         
     file_r_2 = open("at_nickname_to_(uid_or_uname).txt", 'r')
@@ -200,6 +162,32 @@ def chuli_nickname_crawl_userinfo():
     for thread in all_thrads_list:
         thread.join()  
 
+# 通过抓取页面，把nickname转换成uid或者在微博的标示，，，这个是中间的一个需要
+def main_2_just_tran_nickname_to_uidoruname():
+    file_r = open("100_atname_file.txt", 'r')
+    
+    nickname_list = []
+    for line in file_r.readlines():
+        op_nickname = line[line.find('nickname:'):]
+        nickname = op_nickname[op_nickname.find(':') + 1:op_nickname.rfind(']')]
+        nickname_list.append(nickname)
+    
+    all_thrads_list = []
+    start = 0
+    end = 10
+    count = 1
+    while end < len(nickname_list):
+        all_thrads_list.append(crawl_uid_from_nickname(nickname_list[start:end], "crawl_uid_from_nickname_" + str(count)))
+        start += 10
+        end += 10
+        count += 1
+    if(start < len(nickname_list)):
+        all_thrads_list.append(crawl_uid_from_nickname(nickname_list[start:len(nickname_list)], "crawl_uid_from_nickname_" + str(count)))
+
+    for thread in all_thrads_list:
+        thread.start()
+    for thread in all_thrads_list:
+        thread.join()  
 
 ###################################################################################### start 1
 # 用query expansion ，抓取相应词语的微博。
@@ -208,40 +196,43 @@ def chuli_nickname_crawl_userinfo():
 # start_time : datetime对象，开始时间   end_time ： datetime对象，结束时间
 def crawl_keywords_list(key_word_list, start_time, end_time):
     all_thrads_list = []
-    
     for key_word in key_word_list:
-        all_thrads_list.extend(crawl_set_time_main_many(key_word, start_time, end_time,110))
-    
+        all_thrads_list.extend(crawl_set_time_main_many(key_word, start_time, end_time, 110))    
     for thread in all_thrads_list:
         thread.start()
     for thread in all_thrads_list:
         thread.join()  
 
-# 读文件，构造keywordslist 
+# 读文件，构造keywordslist ，这个是 query expansion 的抓取
 def gen_keywords_list():
     # 已操作文件： 1 
-    file_r = open('./query_expansion_three_word/result_three_word_0.txt','r')
+    file_r = open('./query_expansion_three_word/result_three_word_0.txt', 'r')
     start_time = ""
-    end_time  = ""
+    end_time = ""
     count = 1
     key_words_list = []
     for line in file_r.readlines():
         if count == 1:
             line = line[:-1].split(' ')
-            start_time = datetime.datetime(int(line[0]),int(line[1]),int(line[2]))
+            start_time = datetime.datetime(int(line[0]), int(line[1]), int(line[2]))
         elif count == 2:
             line = line[:-1].split(' ')
-            end_time = datetime.datetime(int(line[0]),int(line[1]),int(line[2]))
+            end_time = datetime.datetime(int(line[0]), int(line[1]), int(line[2]))
         else:
             key_words_list.append(line[:line.find('-')])  
-        count+=1
-#     print str(start_time),str(end_time)
-#     print len(key_words_list)
-    return (key_words_list,start_time,end_time)
+        count += 1
+    return (key_words_list, start_time, end_time)
 ###################################################################################### end 1
-
-if __name__ == '__main__':
+# 对于所有单独可运行的函数的整理
+def individal_main():
     
+    
+    pass
+
+
+
+
+if __name__ == '__main__':    
 #     key_words_list,start_time,end_time=gen_keywords_list()
 #     crawl_keywords_list(key_words_list, start_time, end_time)
     
