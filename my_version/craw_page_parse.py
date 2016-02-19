@@ -28,7 +28,7 @@ from requests.exceptions import ReadTimeout
 reload(sys)  
 sys.setdefaultencoding('utf8')   
 
-
+# 抓取页面的类
 class Crawler_with_proxy:
     
     def __init__(self, url, cookie, proxy):
@@ -38,7 +38,6 @@ class Crawler_with_proxy:
     
     def get_page(self):
         proxies = {"http": self.proxy}
-        
         user_agent_list = ["Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0", \
                            "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1", \
                            "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/535.11 (KHTML, like Gecko) Chrome/17.0.963.84 Safari/535.11 SE 2.X MetaSr 1.0", \
@@ -52,7 +51,7 @@ class Crawler_with_proxy:
                            "Mozilla/5.0 (Windows NT 6.1; Win64; x64; rv:2.0b13pre) Gecko/20110307 Firefox/4.0b13pre"]
         
         HTTP_HEADERS = {'User-Agent':'Mozilla/5.0 (X11; Linux i686; rv:8.0) Gecko/20100101 Firefox/8.0', 'Accept-encoding':'gzip'}
-        HTTP_HEADERS['User-Agent'] = user_agent_list[int(random.random() * len(user_agent_list))]
+        HTTP_HEADERS['User-Agent'] = user_agent_list[int(random.random() * 1023 % len(user_agent_list))]
         
         reponse_raw = requests.get(self.url, cookies=self.cookie, proxies=proxies, headers=HTTP_HEADERS, timeout=10)
         
@@ -64,14 +63,11 @@ class Crawler_with_proxy:
         else:
             return reponse_raw.text
     
+    # 带着表单数据，去请求页面信息
     def get_page_with_form(self, data):
         proxies = {"http": self.proxy}
         HTTP_HEADERS = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.152 Safari/537.36', 'Accept-encoding':'gzip', 'Content-Type':'application/x-www-form-urlencoded', 'Referer':'http://weibo.cn/search/mblog/?keyword=&advanced=mblog&rl=0&f=s'}
-#         print '1'
-        # ,proxies=proxies
-        # ,cookies=self.cookie,headers=HTTP_HEADERS
         reponse_raw = requests.post(self.url, data, cookies=self.cookie, proxies=proxies)
-#         print "2"
         if reponse_raw.headers['content-type'] == 'gzip':
             buf = StringIO(reponse_raw.text)
             f = gzip.GzipFile(fileobj=buf)
@@ -427,7 +423,9 @@ class crawl_set_time_with_only_keyword(threading.Thread):
             self.start_time = self.start_time + datetime.timedelta(days=1)
             end_time_str = datetime_to_str(self.start_time)            
             # 所有的都抓，不只抓原创的
-            url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+#             url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+            # 只抓原创的
+            url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&hasori=1&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
             self.url_queue.put(url)
             pass
 #         

@@ -176,7 +176,7 @@ class Single_weibo_store(Document):
     all_weibo_num = StringField()
     
 class Single_weibo_with_more_info_store(Document):
-    meta = {'collection': 'climatechange_hashtag'}
+    meta = {'collection': 'zhuan_ji_yin_food_source_append'}
     uid = StringField()
     nickname = StringField()
     is_auth = StringField()

@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import pymongo
 try:
     import sys
     import yaml
@@ -35,7 +36,6 @@ DB_PORT = conf_dic['searchdb']['port']
 
 if __name__ == '__main__':
     print "x"
-    import pymongo
     client = pymongo.MongoClient(DB_HOST, DB_PORT)[DBNAME]
     print client.name
 #     print len(LOGIN_USER_INFOR)

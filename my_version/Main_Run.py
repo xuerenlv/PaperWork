@@ -12,7 +12,6 @@ import os
 import logging.config
 import datetime
 from crawl_comment_from_db import crawl_comment
-from itertools import count
 from craw_page_parse_2 import crawl_uid_from_nickname, \
     crawl_userinfo_from_uname_or_uid, crawl_userinfo_2_from_uid
 from utils_no_crwal import read_file_fetch_something
@@ -101,11 +100,11 @@ def crawl_one_keyword():
 # 抓取一个 hashtag 下所有的微博
 def crawl_hash_tag():
     all_thrads_list = []
-    key_word = 'climatechange'
-    start_time = datetime.datetime(2015, 9, 17)
+    key_word = '气候'
+    start_time = datetime.datetime(2015, 12, 10)
     end_time = datetime.datetime(2015, 12, 31) 
 
-    how_many_days_one_thread = 15
+    how_many_days_one_thread = 5
     while start_time + datetime.timedelta(days=how_many_days_one_thread) < end_time:
         end_2 = start_time + datetime.timedelta(days=how_many_days_one_thread)
         all_thrads_list.append(crawl_set_time_with_only_keyword(key_word, start_time, end_2, 'crawl_settime_thread' + str(start_time) + " to " + str(end_2)))
@@ -223,13 +222,6 @@ def gen_keywords_list():
         count += 1
     return (key_words_list, start_time, end_time)
 ###################################################################################### end 1
-# 对于所有单独可运行的函数的整理
-def individal_main():
-    
-    
-    pass
-
-
 
 
 if __name__ == '__main__':    
