@@ -25,8 +25,12 @@ from store_model import Single_weibo_store, SingleWeibo_with_more_info, \
 from mongoengine.errors import NotUniqueError
 import random
 from requests.exceptions import ReadTimeout
+from urllib import unquote_plus
+
 reload(sys)  
 sys.setdefaultencoding('utf8')   
+
+    
 
 # 抓取页面的类
 class Crawler_with_proxy:
@@ -37,6 +41,7 @@ class Crawler_with_proxy:
         self.proxy = proxy;
     
     def get_page(self):
+        
         proxies = {"http": self.proxy}
         user_agent_list = ["Mozilla/5.0 (Macintosh; Intel Mac OS X 10.10; rv:40.0) Gecko/20100101 Firefox/40.0", \
                            "Mozilla/5.0 (Windows NT 5.1) AppleWebKit/537.1 (KHTML, like Gecko) Chrome/21.0.1180.89 Safari/537.1", \
@@ -67,7 +72,9 @@ class Crawler_with_proxy:
     def get_page_with_form(self, data):
         proxies = {"http": self.proxy}
         HTTP_HEADERS = {'User-Agent':'Mozilla/5.0 (Windows NT 6.1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/42.0.2311.152 Safari/537.36', 'Accept-encoding':'gzip', 'Content-Type':'application/x-www-form-urlencoded', 'Referer':'http://weibo.cn/search/mblog/?keyword=&advanced=mblog&rl=0&f=s'}
+     
         reponse_raw = requests.post(self.url, data, cookies=self.cookie, proxies=proxies)
+        
         if reponse_raw.headers['content-type'] == 'gzip':
             buf = StringIO(reponse_raw.text)
             f = gzip.GzipFile(fileobj=buf)
@@ -140,7 +147,7 @@ class crawl_real_time_with_keyword(threading.Thread):
             time.sleep(20)
             
 
-# 抓取在特定时间段的微博
+# 抓取在特定时间段的微博，keyword 可以是 hashtag，要求不同，选择的 初始 url不同
 # 20110101 格式，每天抓取100个页面，每个页面10条
 # 香港矛盾20130821&endtime=20130821
 #  >>> import datetime
@@ -150,24 +157,55 @@ class crawl_set_time_with_keyword(threading.Thread):
     del_proxy_lock = threading.Lock()
     
     # start_datetime  end_datetime 为 datetime 类型
-    def __init__(self, keyword, start_datetime, end_datetime, thread_name='crawl_set_time_with_keyword'):
+    def __init__(self, keyword, start_datetime, end_datetime, how_many_days_crawl_once,thread_name='crawl_set_time_with_keyword'):
         threading.Thread.__init__(self)
         self.name = thread_name
         self.keyword = keyword
         self.start_time = start_datetime
         self.end_time = end_datetime
+        self.how_many_days_crawl_once = how_many_days_crawl_once
+        
         self.url_queue = Queue()
     
     # 把每一天的第一个页面URL加入到队列中
     def init_url_queue(self):
-        while self.start_time < self.end_time:
-            start_time_str = datetime_to_str(self.start_time)
-            self.start_time = self.start_time + datetime.timedelta(days=10)
-            end_time_str = datetime_to_str(self.start_time)
+        how_many_days_crawl_once = self.how_many_days_crawl_once
+        
+        while self.start_time + datetime.timedelta(days=how_many_days_crawl_once)< self.end_time:
+            end_2 = self.start_time + datetime.timedelta(days=how_many_days_crawl_once)
+            start_time_str = datetime_to_str(self.start_time)            
+            end_time_str = datetime_to_str(end_2)
+            
             # 原创的
-            url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&hasori=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
+#             url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&hasori=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
             # 非原创
 #             url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
+            
+            ## 抓取 hashtag ，url 设置 start
+            # 所有的都抓，不只抓原创的
+            url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+            # 只抓原创的
+            #url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&hasori=1&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+            ## 抓取 hashtag ，url 设置 end
+            
+            self.url_queue.put(url)
+            self.start_time = end_2
+        if self.start_time < self.end_time:
+            start_time_str = datetime_to_str(self.start_time)            
+            end_time_str = datetime_to_str(self.end_time)
+            
+            # 原创的
+#             url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&hasori=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
+            # 非原创
+            url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
+            
+            ## 抓取 hashtag ，url 设置 start
+            # 所有的都抓，不只抓原创的
+            url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+            # 只抓原创的
+            #url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&hasori=1&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+            ## 抓取 hashtag ，url 设置 end
+            
             self.url_queue.put(url)
             pass
         pass
@@ -190,13 +228,16 @@ class crawl_set_time_with_keyword(threading.Thread):
         pass
     
     # 抓取并解析页面
-    def crawl(self, url, is_again=True):
+    def crawl(self, url, is_again=True,for_1_crawl_num = 3):
         loginer = Loginer()
         cookie = loginer.get_cookie()
         proxy = loginer.get_proxy()
         craw_object = Crawler_with_proxy(url, cookie, proxy)
         
-        WeiboSearchLog().get_scheduler_logger().info(self.name + " start to crawl ! " + url)
+        if int(url[url.rfind('=') + 1:]) == 1:
+            WeiboSearchLog().get_scheduler_logger().info(self.name + " start to crawl ! " + url+"  for_1_crawl_num= "+str(for_1_crawl_num))
+        else:
+            WeiboSearchLog().get_scheduler_logger().info(self.name + " start to crawl ! " + url)
         
         weibo_list = []
         try:
@@ -205,12 +246,19 @@ class crawl_set_time_with_keyword(threading.Thread):
             weibo_list = page_parser_from_search_with_more_info(page)
         except:
             print traceback.format_exc()
-            crawl_set_time_with_keyword.del_proxy_lock.acquire()
-            if proxy == loginer.get_proxy():
-                loginer.del_proxy()
-                WeiboSearchLog().get_scheduler_logger().warning(self.name + " proxy exception , change proxy !")
-            crawl_set_time_with_keyword.del_proxy_lock.release()
-            if is_again:
+#             crawl_set_time_with_keyword.del_proxy_lock.acquire()
+#             if proxy == loginer.get_proxy():
+#                 loginer.del_proxy()
+#                 WeiboSearchLog().get_scheduler_logger().warning(self.name + " proxy exception , change proxy !")
+#             crawl_set_time_with_keyword.del_proxy_lock.release()
+
+            if int(url[url.rfind('=') + 1:]) == 1: #第一个页面，必须继续抓取
+                if for_1_crawl_num<=1:
+                    return weibo_list
+                else:
+                    num_p = for_1_crawl_num-1
+                    return self.crawl(url,is_again=False,for_1_crawl_num = num_p)
+            elif is_again:
                 return self.crawl(url, is_again=False)
             else:
                 return weibo_list
@@ -227,7 +275,14 @@ class crawl_set_time_with_keyword(threading.Thread):
                 loginer.del_proxy()
                 WeiboSearchLog().get_scheduler_logger().warning(self.name + " get nothing, change proxy ! " + url)
             crawl_set_time_with_keyword.del_proxy_lock.release()
-            if is_again:
+            
+            if int(url[url.rfind('=') + 1:]) == 1: #第一个页面，必须继续抓取
+                if for_1_crawl_num<=1:
+                    return weibo_list
+                else:
+                    num_p = for_1_crawl_num-1
+                    return self.crawl(url,is_again=False,for_1_crawl_num = num_p)
+            elif is_again:
                 return self.crawl(url, is_again=False)
             else:
                 return weibo_list
@@ -236,7 +291,7 @@ class crawl_set_time_with_keyword(threading.Thread):
             if int(url[url.rfind('=') + 1:]) == 1:
                 total_num = weibo_list[0].all_weibo_num
                 self.put_second_and_more_url_queue(total_num, url)
-            WeiboSearchLog().get_scheduler_logger().info(self.name + " crawl success! " + url)
+            WeiboSearchLog().get_scheduler_logger().info(self.name +" "+str(len(weibo_list))+" "+ " crawl success! " + url)
             return weibo_list
     
     # 第一个版本，将微博存储到文件中
@@ -255,15 +310,14 @@ class crawl_set_time_with_keyword(threading.Thread):
             unique_single = Single_weibo_with_more_info_store(uid=weibo.uid, nickname=weibo.nickname, is_auth=weibo.is_auth, user_url=
                                                weibo.user_url, weibo_url=weibo.weibo_url, content=weibo.content, praise_num=weibo.praise_num,
                                                 retweet_num=weibo.retweet_num, comment_num=weibo.comment_num,
-                                                creat_time=weibo.creat_time, all_weibo_num=weibo.all_weibo_num,
+                                                creat_time=weibo.creat_time, all_weibo_num=weibo.all_weibo_num,come_from_user_id=weibo.come_from_user_id,
                                                 come_from_nickname=weibo.come_from_nickname, come_from_url=weibo.come_from_url,
-                                                come_from_user_is_V=weibo.come_from_user_is_V, at_info=weibo.at_info,
-                                                hash_info=weibo.hash_info,
+                                                come_from_user_is_V=weibo.come_from_user_is_V, at_info=weibo.at_info,hash_info=weibo.hash_info,
                                                 original_retweet_num=weibo.original_retweet_num,
                                                 original_praise_num=weibo.original_praise_num,
-                                                original_comment_num=weibo.original_comment_num,
-                                                retweet_reason=weibo.retweet_reason
-                                                )
+                                                original_comment_num=weibo.original_comment_num,retweet_reason=weibo.retweet_reason,
+                                                retweet_reason_hash_tag = weibo.retweet_reason_hash_tag,
+                                                retweet_reason_at_info=weibo.retweet_reason_at_info)
             try:
                 unique_single.save()
             except NotUniqueError:
@@ -402,162 +456,162 @@ class crawl_set_time_with_keyword_and_nickname(threading.Thread):
         pass
     
 
-# # 抓取所有用户，同一个关键词的
-# 这里的keyword是 hashtag
-class crawl_set_time_with_only_keyword(threading.Thread):  
-    
-    def __init__(self, keyword, start_datetime, end_datetime, thread_name='crawl_set_time_with_only_keyword'):
-        threading.Thread.__init__(self)
-        self.name = thread_name
-        self.keyword = keyword
-        self.start_time = start_datetime
-        self.end_time = end_datetime
-
-        self.url_queue = Queue()
-        self.second_url_queue = Queue() 
-        pass
-    
-    def init_url_queue(self):        
-        while self.start_time < self.end_time:
-            start_time_str = datetime_to_str(self.start_time)
-            self.start_time = self.start_time + datetime.timedelta(days=1)
-            end_time_str = datetime_to_str(self.start_time)            
-            # 所有的都抓，不只抓原创的
-#             url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
-            # 只抓原创的
-            url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&hasori=1&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
-            self.url_queue.put(url)
-            pass
-#         
+# # # 抓取所有用户，同一个关键词的
+# # 这里的keyword是 hashtag
+# class crawl_set_time_with_only_keyword(threading.Thread):  
+#     
+#     def __init__(self, keyword, start_datetime, end_datetime, thread_name='crawl_set_time_with_only_keyword'):
+#         threading.Thread.__init__(self)
+#         self.name = thread_name
+#         self.keyword = keyword
+#         self.start_time = start_datetime
+#         self.end_time = end_datetime
+# 
+#         self.url_queue = Queue()
+#         self.second_url_queue = Queue() 
+#         pass
+#     
+#     def init_url_queue(self):        
 #         while self.start_time < self.end_time:
-#             end_time_str = datetime_to_str(self.end_time)
-#             self.end_time = self.end_time - datetime.timedelta(days=1)
-#             start_time_str = datetime_to_str(self.end_time)            
+#             start_time_str = datetime_to_str(self.start_time)
+#             self.start_time = self.start_time + datetime.timedelta(days=1)
+#             end_time_str = datetime_to_str(self.start_time)            
 #             # 所有的都抓，不只抓原创的
-#             url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+# #             url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+#             # 只抓原创的
+#             url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&hasori=1&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
 #             self.url_queue.put(url)
 #             pass
-        pass
-    
-    # 通过第一天抓的页面，分析出的总条数，填充其后的页面，最多100个页面
-    # total_num:共463327821条
-    def put_second_and_more_url_queue(self, total_num, first_page_url):
-        int_total_num = int(total_num[1:-1])
-        
-        total_page = 0;
-        if int_total_num >= 1000:
-            total_page = 100
-        else:
-            total_page = int_total_num / 10 if int_total_num % 10 == 0  else int_total_num / 10 + 1
-        
-#         print 'page: ', int_total_num, total_page    
-        for i in range(total_page):
-            if i > 1:
-                url = first_page_url[0:-1] + str(i)
-                self.url_queue.put(url)
-        pass
-    
-    # 抓取并解析页面
-    def crawl(self, url, is_again=False):
-        loginer = Loginer()
-        cookie = loginer.get_cookie()
-        proxy = loginer.get_proxy()
-        craw_object = Crawler_with_proxy(url, cookie, proxy)
-        
-        WeiboSearchLog().get_scheduler_logger().info(self.name + " start to crawl ! " + url)
-        
-        weibo_list = []
-        page = ""
-        try:
-            page = craw_object.get_page()
-            
-            # 原始的
-#             weibo_list = page_parser_from_search(page)
-            weibo_list = page_parser_from_search_with_more_info(page)
-
-        except ReadTimeout:
-            self.second_url_queue.put(url)
-            pass
-        
-        except:
-            print traceback.format_exc()
-            crawl_set_time_with_keyword.del_proxy_lock.acquire()
-            if proxy == loginer.get_proxy():
-                loginer.del_proxy()
-                WeiboSearchLog().get_scheduler_logger().warning(self.name + " proxy exception , change proxy !")
-            crawl_set_time_with_keyword.del_proxy_lock.release()
-            if is_again:
-                return self.crawl(url, is_again=False)
-            else:
-                self.second_url_queue.put(url)
-                return weibo_list
-            
-        
-        if len(weibo_list) == 0:
-            if len(page) == 0:
-                return weibo_list
-            if zero_aviable_check_validity(page):
-                WeiboSearchLog().get_scheduler_logger().info(self.name + " get nothing, sina does not have ! " + url)
-                return weibo_list
-            if weibo_guangchang_forbidden(page):
-                WeiboSearchLog().get_scheduler_logger().info(self.name + " get nothing, forbidden ! ! " + url)
-                
-            crawl_set_time_with_keyword.del_proxy_lock.acquire()
-            if proxy == loginer.get_proxy():
-                loginer.del_proxy()
-                WeiboSearchLog().get_scheduler_logger().warning(self.name + " get nothing, change proxy ! " + url)
-            crawl_set_time_with_keyword.del_proxy_lock.release()
-            if is_again:
-                return self.crawl(url, is_again=False)
-            else:
-                self.second_url_queue.put(url)
-                return weibo_list
-            
-        else:
-            if int(url[url.rfind('=') + 1:]) == 1:
-                total_num = weibo_list[0].all_weibo_num
-                self.put_second_and_more_url_queue(total_num, url)
-            WeiboSearchLog().get_scheduler_logger().info(self.name + " crawl success! " + url)
-            return weibo_list
-    
-    # 将微博存储到数据库中
-    def store_weibo_to_db(self, weibo_list):
-        for weibo in weibo_list:
-            # 原始的
-#             unique_single = Single_weibo_store(uid=weibo.uid, nickname=weibo.nickname, is_auth=weibo.is_auth, user_url=weibo.user_url, weibo_url=weibo.weibo_url, content=weibo.content, praise_num=weibo.praise_num, retweet_num=weibo.retweet_num, comment_num=weibo.comment_num, creat_time=weibo.creat_time, all_weibo_num=weibo.all_weibo_num)
-            unique_single = Single_weibo_with_more_info_store(uid=weibo.uid, nickname=weibo.nickname, is_auth=weibo.is_auth, user_url=
-                                               weibo.user_url, weibo_url=weibo.weibo_url, content=weibo.content, praise_num=weibo.praise_num,
-                                                retweet_num=weibo.retweet_num, comment_num=weibo.comment_num,
-                                                creat_time=weibo.creat_time, all_weibo_num=weibo.all_weibo_num,
-                                                come_from_nickname=weibo.come_from_nickname, come_from_url=weibo.come_from_url,
-                                                come_from_user_is_V=weibo.come_from_user_is_V, at_info=weibo.at_info,
-                                                hash_info=weibo.hash_info,
-                                                original_retweet_num=weibo.original_retweet_num,
-                                                original_praise_num=weibo.original_praise_num,
-                                                original_comment_num=weibo.original_comment_num,
-                                                retweet_reason=weibo.retweet_reason
-                                                )
-            try:
-                unique_single.save()
-            except NotUniqueError:
-                pass
-            except:
-                WeiboSearchLog().get_scheduler_logger().info(self.name + " insert to database, something wrong !")
-                pass
-        WeiboSearchLog().get_scheduler_logger().info(self.name + " insert to database, success !")
-        pass
-    
-    def run(self):
-        self.init_url_queue()
-        while not self.url_queue.empty() or not self.second_url_queue.empty():
-            url = ""
-            if not self.url_queue.empty():
-                url = self.url_queue.get()
-            else:
-                url = self.second_url_queue.get()
-            weibo_list = self.crawl(url)
-            self.store_weibo_to_db(weibo_list)
-        pass  
+# #         
+# #         while self.start_time < self.end_time:
+# #             end_time_str = datetime_to_str(self.end_time)
+# #             self.end_time = self.end_time - datetime.timedelta(days=1)
+# #             start_time_str = datetime_to_str(self.end_time)            
+# #             # 所有的都抓，不只抓原创的
+# #             url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+# #             self.url_queue.put(url)
+# #             pass
+#         pass
+#     
+#     # 通过第一天抓的页面，分析出的总条数，填充其后的页面，最多100个页面
+#     # total_num:共463327821条
+#     def put_second_and_more_url_queue(self, total_num, first_page_url):
+#         int_total_num = int(total_num[1:-1])
+#         
+#         total_page = 0;
+#         if int_total_num >= 1000:
+#             total_page = 100
+#         else:
+#             total_page = int_total_num / 10 if int_total_num % 10 == 0  else int_total_num / 10 + 1
+#         
+# #         print 'page: ', int_total_num, total_page    
+#         for i in range(total_page):
+#             if i > 1:
+#                 url = first_page_url[0:-1] + str(i)
+#                 self.url_queue.put(url)
+#         pass
+#     
+#     # 抓取并解析页面
+#     def crawl(self, url, is_again=False):
+#         loginer = Loginer()
+#         cookie = loginer.get_cookie()
+#         proxy = loginer.get_proxy()
+#         craw_object = Crawler_with_proxy(url, cookie, proxy)
+#         
+#         WeiboSearchLog().get_scheduler_logger().info(self.name + " start to crawl ! " + url)
+#         
+#         weibo_list = []
+#         page = ""
+#         try:
+#             page = craw_object.get_page()
+#             
+#             # 原始的
+# #             weibo_list = page_parser_from_search(page)
+#             weibo_list = page_parser_from_search_with_more_info(page)
+# 
+#         except ReadTimeout:
+#             self.second_url_queue.put(url)
+#             pass
+#         
+#         except:
+#             print traceback.format_exc()
+#             crawl_set_time_with_keyword.del_proxy_lock.acquire()
+#             if proxy == loginer.get_proxy():
+#                 loginer.del_proxy()
+#                 WeiboSearchLog().get_scheduler_logger().warning(self.name + " proxy exception , change proxy !")
+#             crawl_set_time_with_keyword.del_proxy_lock.release()
+#             if is_again:
+#                 return self.crawl(url, is_again=False)
+#             else:
+#                 self.second_url_queue.put(url)
+#                 return weibo_list
+#             
+#         
+#         if len(weibo_list) == 0:
+#             if len(page) == 0:
+#                 return weibo_list
+#             if zero_aviable_check_validity(page):
+#                 WeiboSearchLog().get_scheduler_logger().info(self.name + " get nothing, sina does not have ! " + url)
+#                 return weibo_list
+#             if weibo_guangchang_forbidden(page):
+#                 WeiboSearchLog().get_scheduler_logger().info(self.name + " get nothing, forbidden ! ! " + url)
+#                 
+#             crawl_set_time_with_keyword.del_proxy_lock.acquire()
+#             if proxy == loginer.get_proxy():
+#                 loginer.del_proxy()
+#                 WeiboSearchLog().get_scheduler_logger().warning(self.name + " get nothing, change proxy ! " + url)
+#             crawl_set_time_with_keyword.del_proxy_lock.release()
+#             if is_again:
+#                 return self.crawl(url, is_again=False)
+#             else:
+#                 self.second_url_queue.put(url)
+#                 return weibo_list
+#             
+#         else:
+#             if int(url[url.rfind('=') + 1:]) == 1:
+#                 total_num = weibo_list[0].all_weibo_num
+#                 self.put_second_and_more_url_queue(total_num, url)
+#             WeiboSearchLog().get_scheduler_logger().info(self.name + " crawl success! " + url)
+#             return weibo_list
+#     
+#     # 将微博存储到数据库中
+#     def store_weibo_to_db(self, weibo_list):
+#         for weibo in weibo_list:
+#             # 原始的
+# #             unique_single = Single_weibo_store(uid=weibo.uid, nickname=weibo.nickname, is_auth=weibo.is_auth, user_url=weibo.user_url, weibo_url=weibo.weibo_url, content=weibo.content, praise_num=weibo.praise_num, retweet_num=weibo.retweet_num, comment_num=weibo.comment_num, creat_time=weibo.creat_time, all_weibo_num=weibo.all_weibo_num)
+#             unique_single = Single_weibo_with_more_info_store(uid=weibo.uid, nickname=weibo.nickname, is_auth=weibo.is_auth, user_url=
+#                                                weibo.user_url, weibo_url=weibo.weibo_url, content=weibo.content, praise_num=weibo.praise_num,
+#                                                 retweet_num=weibo.retweet_num, comment_num=weibo.comment_num,
+#                                                 creat_time=weibo.creat_time, all_weibo_num=weibo.all_weibo_num,
+#                                                 come_from_nickname=weibo.come_from_nickname, come_from_url=weibo.come_from_url,
+#                                                 come_from_user_is_V=weibo.come_from_user_is_V, at_info=weibo.at_info,
+#                                                 hash_info=weibo.hash_info,
+#                                                 original_retweet_num=weibo.original_retweet_num,
+#                                                 original_praise_num=weibo.original_praise_num,
+#                                                 original_comment_num=weibo.original_comment_num,
+#                                                 retweet_reason=weibo.retweet_reason
+#                                                 )
+#             try:
+#                 unique_single.save()
+#             except NotUniqueError:
+#                 pass
+#             except:
+#                 WeiboSearchLog().get_scheduler_logger().info(self.name + " insert to database, something wrong !")
+#                 pass
+#         WeiboSearchLog().get_scheduler_logger().info(self.name + " insert to database, success !")
+#         pass
+#     
+#     def run(self):
+#         self.init_url_queue()
+#         while not self.url_queue.empty() or not self.second_url_queue.empty():
+#             url = ""
+#             if not self.url_queue.empty():
+#                 url = self.url_queue.get()
+#             else:
+#                 url = self.second_url_queue.get()
+#             weibo_list = self.crawl(url)
+#             self.store_weibo_to_db(weibo_list)
+#         pass  
     
 ##########################################################################  工具相关    #########################################################################################################################
 # datetime.datetime(2010, 1, 1)  ---> 20100101
@@ -685,26 +739,33 @@ def page_parser_from_search_with_more_info(page):
                 uid = opt_user_url[str(opt_user_url).rfind('/') + 1:]
             else:
                 user_url = 'http://weibo.com' + opt_user_url[str(opt_user_url).rfind('/'):]
-                comment_url = str((div_one.find('a', attrs={'class':'cc'})).attrs['href'])
-                uid = comment_url[comment_url.find('uid=') + 4:comment_url.find('&')]
+#                 comment_url = str((div_one.find('a', attrs={'class':'cc'})).attrs['href'])
+#                 if 'uid=' in comment_url:
+#                     uid = comment_url[comment_url.find('uid=') + 4:comment_url.find('&')]
+#                 else:
+#                     uid = comment_url[comment_url.find('comment/') + 8:comment_url.find('?')]
+                uid = opt_user_url[str(opt_user_url).rfind('/')+1:]
             weibo_url = "http://weibo.com/" + uid + '/' + weibo_signal
             
-            #*********************************************************************
+            #*********************************************************************    http://weibo.cn/BEsZz8M2i
             # 对 content 做处理，获取更多的信息
             content = div_one.find('span', attrs={'class':'ctt'})
             hash_tag_list = []
             at_info_list = []
             
-            content_text = content.getText()[1:]
+#             content_text = content.getText()[1:]
+            content_text = content.getText()
             for a_html in content.findAll('a'):
                 a_html_text = str(a_html.getText())
                 if u'#' in a_html_text:
                     hash_tag_list.append(a_html_text)
                 if u'@' in a_html_text:
-                    at_info_list.append(str(a_html.attrs['href']) + ":" + a_html_text)
+                    at_href = str(a_html.attrs['href'])
+                    decode_url = unquote_plus(at_href[at_href.rfind("/")+1:])
+                    at_info_list.append(decode_url + ":" + a_html_text)
             
-            hash_tag_info = '[xhj_fenge]'.join(hash_tag_list)
-            at_info = '[xhj_fenge]'.join(at_info_list)
+            hash_tag_info = '[fen_ge]'.join(hash_tag_list)
+            at_info = '[fen_ge]'.join(at_info_list)
             #*********************************************************************
             
             is_auth = ''   
@@ -722,6 +783,7 @@ def page_parser_from_search_with_more_info(page):
             
             ##*********************************************************************************
             # 转发信息，@信息，HashTag信息的获取
+            come_from_user_id = ""
             come_from_nickname = ""
             come_from_url = ""
             come_from_user_is_V = ""
@@ -730,6 +792,12 @@ def page_parser_from_search_with_more_info(page):
             original_praise_num = ''
             original_comment_num = ''
             retweet_reason = ''
+            
+            retweet_reason_hash_tag = ""
+            retweet_reason_at_info = ""
+            
+            retweet_reason_hash_tag_list = []
+            retweet_reason_at_info_list = []
             
             # 判断该信息是不是转发而来
             does_have_zhuanfa_info = False
@@ -752,6 +820,7 @@ def page_parser_from_search_with_more_info(page):
                     if u'转发了' in span_cmt.getText() and span_cmt.find('a') is not None:
                         come_from_nickname = span_cmt.find('a').getText()
                         come_from_url = span_cmt.find('a').attrs['href']
+                        come_from_user_id = come_from_url[come_from_url.rfind("/")+1:]
                     if span_cmt.find('img', attrs={'alt':'V'}) is not None:
                         come_from_user_is_V = 'V'
                     if u'赞' in span_cmt.getText():
@@ -761,17 +830,31 @@ def page_parser_from_search_with_more_info(page):
             
                 for div_inside_one in div_one.findAll('div'):
                     if u'转发理由' in div_inside_one.getText():
+                        
+                        ## 转发理由中的 hashtag 与 @－－－－－start
+                        for a_html in div_inside_one.findAll('a'):
+                            a_html_text = str(a_html.getText())
+                            if u'#' in a_html_text:
+                                retweet_reason_hash_tag_list.append(a_html_text)
+                            if u'@' in a_html_text:
+                                at_href = str(a_html.attrs['href'])
+                                decode_url = unquote_plus(at_href[at_href.rfind("/")+1:])
+                                retweet_reason_at_info_list.append(decode_url + ":" + a_html_text)
+                        ## 转发理由中的 hashtag 与 @－－－－－end
+                        
                         or_str = div_inside_one.getText()
                         retweet_reason = or_str[5:str(or_str).rfind(u'赞')]
-            
+                        
+            retweet_reason_hash_tag='[fen_ge]'.join(retweet_reason_hash_tag_list)
+            retweet_reason_at_info = '[fen_ge]'.join(retweet_reason_at_info_list)
 #             print come_from_nickname,come_from_url
             ##*********************************************************************************
             
             singleWeibo_with_more_info_object = SingleWeibo_with_more_info(uid, nickname, is_auth, user_url, weibo_url, content_text, praise_num,
-                                                                           retweet_num, comment_num, creat_time, all_weibo_num,
+                                                                           retweet_num, comment_num, creat_time, all_weibo_num,come_from_user_id,
                                                                            come_from_nickname, come_from_url, come_from_user_is_V,
                                                                            at_info, hash_tag_info, original_retweet_num, original_praise_num,
-                                                                           original_comment_num, retweet_reason)
+                                                                           original_comment_num, retweet_reason,retweet_reason_hash_tag,retweet_reason_at_info)
             weibo_list.append(singleWeibo_with_more_info_object)
     
     return weibo_list

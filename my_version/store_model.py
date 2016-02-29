@@ -41,7 +41,7 @@ class SingleWeibo():
 # 单独的一条微博，有转发信息，@信息，＃信息            
 class SingleWeibo_with_more_info():
     
-    def __init__(self, uid, nickname, is_auth, user_url, weibo_url, content, praise_num, retweet_num, comment_num, creat_time, all_weibo_num, come_from_nickname, come_from_url, come_from_user_is_V, at_info, hash_info, original_retweet_num, original_praise_num, original_comment_num, retweet_reason):
+    def __init__(self, uid, nickname, is_auth, user_url, weibo_url, content, praise_num, retweet_num, comment_num, creat_time, all_weibo_num, come_from_user_id,come_from_nickname, come_from_url, come_from_user_is_V, at_info, hash_info, original_retweet_num, original_praise_num, original_comment_num, retweet_reason,retweet_reason_hash_tag,retweet_reason_at_info):
         self.uid = uid
         self.nickname = nickname
         self.is_auth = is_auth
@@ -56,6 +56,7 @@ class SingleWeibo_with_more_info():
         self.creat_time = creat_time
         self.all_weibo_num = all_weibo_num
         
+        self.come_from_user_id = come_from_user_id
         self.come_from_nickname = come_from_nickname
         self.come_from_url = come_from_url
         self.come_from_user_is_V = come_from_user_is_V
@@ -67,6 +68,9 @@ class SingleWeibo_with_more_info():
         self.original_praise_num = original_praise_num
         self.original_comment_num = original_comment_num
         self.retweet_reason = retweet_reason
+        
+        self.retweet_reason_hash_tag = retweet_reason_hash_tag
+        self.retweet_reason_at_info = retweet_reason_at_info
         
     def to_string(self):
         return self.uid + '\t' + self.nickname + '\t' + self.is_auth + '\t' + self.weibo_url + '\t' + self.user_url + '\t' + \
@@ -90,12 +94,17 @@ class Single_comment():
 
 class UserInfo():
         
-    def __init__(self, uid_or_uname, nickname, is_persion, check_or_not, fensi):
+    def __init__(self, uid_or_uname, nickname, is_persion, check_or_not, fensi,sex,location,check_info,weibo_all_nums,guan_zhu_nums):
         self.uid_or_uname = uid_or_uname
         self.nickname = nickname
         self.is_persion = is_persion
         self.check_or_not = check_or_not
         self.fensi = fensi
+        self.sex = sex
+        self.location = location
+        self.check_info = check_info
+        self.weibo_all_nums = weibo_all_nums
+        self.guan_zhu_nums = guan_zhu_nums
 
     def to_string(self):
         return self.uid_or_uname + '\t' + self.nickname + '\t' + self.is_persion + '\t' + self.check_or_not + '\t' + self.fensi
@@ -143,11 +152,18 @@ class UserInfo_loc_store(Document):
     check_info = StringField()
 
 class UserInfo_store(Document):
+    meta = {'collection': 'user_info_all_store'}
     uid_or_uname = StringField(unique=True)
     nickname = StringField()
     is_persion = StringField()
     check_or_not = StringField()
     fensi = StringField()
+    
+    sex= StringField()
+    location= StringField()
+    check_info= StringField()
+    weibo_all_nums= StringField()
+    guan_zhu_nums= StringField()
 
 class Single_comment_store(Document):
     weibo_id = StringField()
@@ -176,7 +192,7 @@ class Single_weibo_store(Document):
     all_weibo_num = StringField()
     
 class Single_weibo_with_more_info_store(Document):
-    meta = {'collection': 'zhuan_ji_yin_food_source_append'}
+    meta = {'collection': 'zhuanjiyin_2013_06_01_to_2014_01_01_f_2'}
     uid = StringField()
     nickname = StringField()
     is_auth = StringField()
@@ -191,6 +207,7 @@ class Single_weibo_with_more_info_store(Document):
     creat_time = StringField()
     all_weibo_num = StringField()
 
+    come_from_user_id = StringField()
     come_from_nickname = StringField()
     come_from_url = StringField()
     come_from_user_is_V = StringField()
@@ -202,3 +219,5 @@ class Single_weibo_with_more_info_store(Document):
     original_praise_num = StringField()
     original_comment_num = StringField()
     retweet_reason = StringField()
+    retweet_reason_hash_tag = StringField()
+    retweet_reason_at_info = StringField()
