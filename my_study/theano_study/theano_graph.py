@@ -14,4 +14,4 @@ f = theano.function([a], b)  # compile function
 print f([0, 1, 2])  # prints `array([0,2,1026])`
 
 # theano.printing.pydotprint(b, outfile="symbolic_graph_unopt.png", var_with_name_simple=True)  
-theano.printing.pydotprint(f, outfile="symbolic_graph_opt.png", var_with_name_simple=True)  
+theano.printing.pydotprint(f, outfile="symbolic_graph_opt3.png", var_with_name_simple=True)  

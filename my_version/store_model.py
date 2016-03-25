@@ -192,7 +192,7 @@ class Single_weibo_store(Document):
     all_weibo_num = StringField()
     
 class Single_weibo_with_more_info_store(Document):
-    meta = {'collection': 'zhuanjiyin_2013_06_01_to_2014_01_01_f_2'}
+    meta = {'collection': 'zhuanjiyin_2012_01_01_to_2012_06_01_f_1'}
     uid = StringField()
     nickname = StringField()
     is_auth = StringField()
