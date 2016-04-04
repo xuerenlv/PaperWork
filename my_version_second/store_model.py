@@ -41,12 +41,7 @@ class SingleWeibo():
 # 单独的一条微博，有转发信息，@信息，＃信息            
 class SingleWeibo_with_more_info():
     
-    def __init__(self, uid, nickname, is_auth, user_url, weibo_url, content, praise_num, retweet_num, comment_num, creat_time, all_weibo_num, come_from_user_id,come_from_nickname, come_from_url, come_from_user_is_V, at_info, hash_info, original_retweet_num, original_praise_num, original_comment_num, retweet_reason,retweet_reason_hash_tag,retweet_reason_at_info):
-        self.uid = uid
-        self.nickname = nickname
-        self.is_auth = is_auth
-        self.user_url = user_url
-        self.weibo_url = weibo_url
+    def __init__(self, content, praise_num, retweet_num, comment_num, creat_time, all_weibo_num, come_from_user_id,come_from_nickname, come_from_url, come_from_user_is_V, at_info, hash_info, original_retweet_num, original_praise_num, original_comment_num, retweet_reason,retweet_reason_hash_tag,retweet_reason_at_info):
         self.content = content
         
         self.praise_num = praise_num
@@ -73,9 +68,8 @@ class SingleWeibo_with_more_info():
         self.retweet_reason_at_info = retweet_reason_at_info
         
     def to_string(self):
-        return self.uid + '\t' + self.nickname + '\t' + self.is_auth + '\t' + self.weibo_url + '\t' + self.user_url + '\t' + \
-            self.content + '\t' + self.praise_num + '\t' + self.retweet_num + '\t' + self.comment_num + '\t' + self.creat_time + '\t' + \
-            self.all_weibo_num + '\t' + self.come_from + '\t' + self.at_info + '\t' + self.hash_info
+        return self.content + '\t' + self.praise_num + '\t' + self.retweet_num + '\t' + self.comment_num + '\t' + self.creat_time + '\t' + \
+            self.all_weibo_num  + '\t' + self.at_info + '\t' + self.hash_info
 
 
 
@@ -192,12 +186,8 @@ class Single_weibo_store(Document):
     all_weibo_num = StringField()
     
 class Single_weibo_with_more_info_store(Document):
-    meta = {'collection': 'zhuanjiyin_2012_01_01_to_2012_06_01_f_1'}
+    meta = {'collection': 'real_crawl_first_phrase'}
     uid = StringField()
-    nickname = StringField()
-    is_auth = StringField()
-    user_url = StringField()
-    weibo_url = StringField()
     content = StringField()
         
     praise_num = StringField()

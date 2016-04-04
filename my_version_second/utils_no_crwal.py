@@ -7,6 +7,25 @@ Created on Jan 13, 2016
 '''
 from store_model import Single_weibo_with_more_info_store, Single_comment_store,\
     UserInfo_store
+import random
+
+
+
+def shuffle_queue(one_queue):
+    contain_li = []
+    while not one_queue.empty():
+        contain_li.append(one_queue.get())
+    random.shuffle(contain_li)
+    for one_ele in contain_li:
+        one_queue.put(one_ele) 
+
+def uid_is_numbers(one_uid):
+    re = True
+    for one_char in one_uid:
+        if one_char<'0' or one_char >'9':
+            re = False
+    return re
+
 
 # [http://weibo.cn/comment/CsfPu1hds?rl=1#cmtfrm][10]  "&page="+str(page_num)
 # ## 读取文件，从文件中获取，微博id，weibo_url，评论数目
