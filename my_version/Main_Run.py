@@ -17,7 +17,8 @@ from crawl_comment_from_db import crawl_comment
 from craw_page_parse_2 import crawl_uid_from_nickname, \
     crawl_userinfo_from_uname_or_uid, crawl_userinfo_2_from_uid
 from utils_no_crwal import read_file_fetch_something
-from store_model import UserInfo_store, Single_weibo_with_more_info_store
+from store_model import UserInfo_store, Single_weibo_with_more_info_store, \
+    Bie_Ming_store
 from urllib import quote_plus
 
 if not os.path.exists( 'logs/' ):
@@ -95,10 +96,10 @@ def crawl_comment_from_fie( weibo_file_name ):
 # 抓取一个关键词下所有的微博；也可以抓取一个 hashtag 下所有的微博，但是要修改相应的 初始url
 def crawl_one_keyword():
     all_thrads_list = []
-    key_word = '转基因食品'
-    start_time = datetime.datetime( 2015, 1, 1 )
-    end_time = datetime.datetime( 2015, 12, 31 )    
-    all_thrads_list.extend( crawl_set_time_main_many( key_word, start_time, end_time, how_many_days_one_thread = 30, how_many_days_crawl_once = 1 ) )    
+    key_word = '转基因'
+    start_time = datetime.datetime( 2014, 3, 15 )
+    end_time = datetime.datetime( 2014, 3, 31 )    
+    all_thrads_list.extend( crawl_set_time_main_many( key_word, start_time, end_time, how_many_days_one_thread = 2, how_many_days_crawl_once = 1 ) )    
     for thread in all_thrads_list:
         thread.start()
     for thread in all_thrads_list:
@@ -139,19 +140,19 @@ def crawl_set_user_weibo_about_keyword():
 
 ####################################################################################### crawl userinfo start
 # 通过用户的uid来抓取用户信息，，抓取任务中的一个需要
-def chuli_nickname_crawl_userinfo( ):
+def chuli_nickname_crawl_userinfo():
     uid_or_uname_list = read_data_from_database_for___uid_or_uname_list()
-    how_many_uids_one_thread = 100
+    how_many_uids_one_thread = len( uid_or_uname_list ) / 8
     
     all_thrads_list = []
     start = 0
     end = how_many_uids_one_thread
-    count = 1
+    count = 0
     while end < len( uid_or_uname_list ):
         all_thrads_list.append( crawl_userinfo_from_uname_or_uid( uid_or_uname_list[start:end], "crawl_userinfo_from_uname_or_uid_" + str( count ) ) )
-        start += how_many_uids_one_thread
-        end += how_many_uids_one_thread
-        count += 1
+        start = start + how_many_uids_one_thread
+        end = end + how_many_uids_one_thread
+        count = count + 1
     if start < len( uid_or_uname_list ):
         all_thrads_list.append( crawl_userinfo_from_uname_or_uid( uid_or_uname_list[start:len( uid_or_uname_list )], "crawl_userinfo_from_uname_or_uid_" + str( count ) ) )
      
@@ -169,51 +170,51 @@ def read_data_from_database_uids_and_nicknames():
     return uids_and_nicknames
 
 # 处理数据库中的 at_info
-def chuli_at_info(at_info):
+def chuli_at_info( at_info ):
     nickname_list = []
-    for one in at_info.split("[fen_ge]"):
-        nickname_list.append(one[:one.find(":")])    
+    for one in at_info.split( "[fen_ge]" ):
+        nickname_list.append( one[:one.find( ":" )] )    
     return nickname_list
 
-def read_alread_crawled_uids_or_nicknames():
-    alread_crawled_uids_or_nicknames = []
-    fr = open("data/already_crawled_uids_or_nicknames.txt","r")
-    for one_line in fr.readlines():
-#         alread_crawled_uids_or_nicknames.append(one_line[:-1])
-        pass
-    fr.close()
-    return alread_crawled_uids_or_nicknames
+# def read_alread_crawled_uids_or_nicknames():
+#     alread_crawled_uids_or_nicknames = []
+#     fr = open("data/already_crawled_uids_or_nicknames.txt","r")
+#     for one_line in fr.readlines():
+# #         alread_crawled_uids_or_nicknames.append(one_line[:-1])
+#         pass
+#     fr.close()
+#     return alread_crawled_uids_or_nicknames
 
-def write_alread_crawled_uids_or_nicknames(alread_crawled_uids_or_nicknames):
-    fw = open("data/already_crawled_uids_or_nicknames.txt","a")
-    for one_thing in alread_crawled_uids_or_nicknames:
-        fw.write(one_thing+"\n")
-    fw.close()
+# def write_alread_crawled_uids_or_nicknames(alread_crawled_uids_or_nicknames):
+#     fw = open("data/already_crawled_uids_or_nicknames.txt","a")
+#     for one_thing in alread_crawled_uids_or_nicknames:
+#         fw.write(one_thing+"\n")
+#     fw.close()
 
 
 # 从数据库中读出数据构造 uid_or_uname_list
 def read_data_from_database_for___uid_or_uname_list():
     uid_or_uname_list = []
-    uids_and_nicknames = read_data_from_database_uids_and_nicknames()
     
     this_uid_list = []
     this_nickname_list = []
     for one_weibo in Single_weibo_with_more_info_store.objects:
-        this_uid_list.append(one_weibo["uid"])
-        this_uid_list.append(one_weibo["come_from_user_id"])
-        this_nickname_list.extend(chuli_at_info(one_weibo["at_info"]))
-        this_nickname_list.extend(chuli_at_info(one_weibo["retweet_reason_at_info"]))
+        this_uid_list.append( one_weibo["uid"] )
+        this_uid_list.append( one_weibo["come_from_user_id"] )
+        this_nickname_list.extend( chuli_at_info( one_weibo["at_info"] ) )
+        this_nickname_list.extend( chuli_at_info( one_weibo["retweet_reason_at_info"] ) )
     
-    alread_crawled_uids_or_nicknames = read_alread_crawled_uids_or_nicknames()
-    for uid in set(this_uid_list):    
-        if uid not in uids_and_nicknames and uid not in alread_crawled_uids_or_nicknames:
-            uid_or_uname_list.append(uid)
-    for nickname in set(this_nickname_list) :
-        if nickname not in uids_and_nicknames and  nickname not in alread_crawled_uids_or_nicknames and len(nickname) != 0:
-            uid_or_uname_list.append(nickname)
-    
-    write_alread_crawled_uids_or_nicknames(uid_or_uname_list)
-    print len(uid_or_uname_list)
+    for uid_or_nickname in set( this_uid_list ):    
+        if len( UserInfo_store.objects( uid_or_uname = str( uid_or_nickname ) ) ) == 0 and len( UserInfo_store.objects( nickname = str( uid_or_nickname ) ) ) == 0 \
+            and len( Bie_Ming_store.objects( uid_or_uname = str( uid_or_nickname ) ) ) == 0 and len( Bie_Ming_store.objects( bie_ming = str( uid_or_nickname ) ) ) == 0 :
+            uid_or_uname_list.append( uid_or_nickname )
+            
+    for uid_or_nickname in set( this_nickname_list ) :
+        if len( UserInfo_store.objects( uid_or_uname = str( uid_or_nickname ) ) ) == 0 and len( UserInfo_store.objects( nickname = str( uid_or_nickname ) ) ) == 0 \
+            and len( Bie_Ming_store.objects( uid_or_uname = str( uid_or_nickname ) ) ) == 0 and len( Bie_Ming_store.objects( bie_ming = str( uid_or_nickname ) ) ) == 0 :
+            uid_or_uname_list.append( uid_or_nickname )
+
+    print len( uid_or_uname_list )
     return uid_or_uname_list
 
 ####################################################################################### crawl userinfo end

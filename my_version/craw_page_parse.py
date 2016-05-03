@@ -179,11 +179,11 @@ class crawl_set_time_with_keyword(threading.Thread):
             # 原创的
 #             url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&hasori=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
             # 非原创
-#             url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
+            url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
             
             ## 抓取 hashtag ，url 设置 start
             # 所有的都抓，不只抓原创的
-            url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+#             url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
             # 只抓原创的
             #url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&hasori=1&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
             ## 抓取 hashtag ，url 设置 end
@@ -201,7 +201,7 @@ class crawl_set_time_with_keyword(threading.Thread):
             
             ## 抓取 hashtag ，url 设置 start
             # 所有的都抓，不只抓原创的
-            url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+#             url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
             # 只抓原创的
             #url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&hasori=1&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
             ## 抓取 hashtag ，url 设置 end

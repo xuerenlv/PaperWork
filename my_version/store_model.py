@@ -173,6 +173,16 @@ class Single_comment_store(Document):
     content = StringField()
     praise_num = StringField()
     creat_time = StringField()
+
+# 在抓取用户信息的时候，发现有一种映射关系
+# INFO:Thread-4 insert to database, not unique ! 1749990115 crawl: bjyouth
+class Bie_Ming_store(Document):
+    meta = {'collection': 'user_info_all_store_bie_ming_temp'}
+    
+    uid_or_uname = StringField(unique=True)
+    bie_ming = StringField()
+    
+    pass
         
 
 class Single_weibo_store(Document):
@@ -192,7 +202,7 @@ class Single_weibo_store(Document):
     all_weibo_num = StringField()
     
 class Single_weibo_with_more_info_store(Document):
-    meta = {'collection': 'zhuanjiyin_2012_01_01_to_2012_06_01_f_1'}
+    meta = {'collection': 'zhuanjiyin_nohashtag_2016_02_11_to_2016_02_26_detmine_2'}
     uid = StringField()
     nickname = StringField()
     is_auth = StringField()
