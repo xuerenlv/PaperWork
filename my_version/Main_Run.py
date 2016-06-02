@@ -97,9 +97,9 @@ def crawl_comment_from_fie( weibo_file_name ):
 def crawl_one_keyword():
     all_thrads_list = []
     key_word = '转基因'
-    start_time = datetime.datetime( 2014, 3, 15 )
-    end_time = datetime.datetime( 2014, 3, 31 )    
-    all_thrads_list.extend( crawl_set_time_main_many( key_word, start_time, end_time, how_many_days_one_thread = 2, how_many_days_crawl_once = 1 ) )    
+    start_time = datetime.datetime( 2016, 2, 15 )
+    end_time = datetime.datetime( 2016, 2, 27)    
+    all_thrads_list.extend( crawl_set_time_main_many( key_word, start_time, end_time, how_many_days_one_thread = 1, how_many_days_crawl_once = 1 ) )    
     for thread in all_thrads_list:
         thread.start()
     for thread in all_thrads_list:
@@ -287,9 +287,9 @@ if __name__ == '__main__':
 #     key_words_list,start_time,end_time=gen_keywords_list()
 #     crawl_keywords_list(key_words_list, start_time, end_time)
     
-#     crawl_one_keyword()
+    crawl_one_keyword()
     
-    chuli_nickname_crawl_userinfo()
+#     chuli_nickname_crawl_userinfo()
     
 #     crawl_set_user_weibo_about_keyword()
     

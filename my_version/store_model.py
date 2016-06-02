@@ -202,7 +202,7 @@ class Single_weibo_store(Document):
     all_weibo_num = StringField()
     
 class Single_weibo_with_more_info_store(Document):
-    meta = {'collection': 'zhuanjiyin_nohashtag_2016_02_11_to_2016_02_26_detmine_2'}
+    meta = {'collection': 'zhuanjiyin_nohashtag_original_2016_02_15_to_2016_02_26_detmine_3'}
     uid = StringField()
     nickname = StringField()
     is_auth = StringField()

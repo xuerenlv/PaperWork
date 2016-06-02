@@ -177,9 +177,9 @@ class crawl_set_time_with_keyword(threading.Thread):
             end_time_str = datetime_to_str(end_2)
             
             # 原创的
-#             url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&hasori=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
+            url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&hasori=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
             # 非原创
-            url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
+#             url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
             
             ## 抓取 hashtag ，url 设置 start
             # 所有的都抓，不只抓原创的
@@ -195,9 +195,9 @@ class crawl_set_time_with_keyword(threading.Thread):
             end_time_str = datetime_to_str(self.end_time)
             
             # 原创的
-#             url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&hasori=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
+            url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&hasori=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
             # 非原创
-            url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
+#             url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
             
             ## 抓取 hashtag ，url 设置 start
             # 所有的都抓，不只抓原创的
@@ -258,10 +258,11 @@ class crawl_set_time_with_keyword(threading.Thread):
                 else:
                     num_p = for_1_crawl_num-1
                     return self.crawl(url,is_again=False,for_1_crawl_num = num_p)
-            elif is_again:
-                return self.crawl(url, is_again=False)
+#             elif is_again:
             else:
-                return weibo_list
+                return self.crawl(url, is_again=False)
+#             else:
+#                 return weibo_list
         
         
         if len(weibo_list) == 0:
