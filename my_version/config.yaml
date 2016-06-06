@@ -20,7 +20,7 @@ login:
 searchdb:
 
     dbname: second_zhuanjiyin_3_networks
-    host: 127.0.0.1
+    host: 114.212.83.2
     port: 27017
 
 proxies:

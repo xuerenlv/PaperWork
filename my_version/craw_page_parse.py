@@ -29,7 +29,6 @@ from urllib import unquote_plus
 
 reload(sys)  
 sys.setdefaultencoding('utf8')   
-
     
 
 # 抓取页面的类

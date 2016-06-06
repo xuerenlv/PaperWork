@@ -5,7 +5,7 @@ Created on Sep 2, 2015
 @author: xhj
 '''
 from store_model import Single_weibo_store, Single_comment, Single_comment_store, \
-    UserInfo_store, Single_weibo_with_more_info_store
+    UserInfo_store, Single_weibo_with_more_info_store, Weibo_url_to_Comment_url
 import sys
 import threading
 import Queue
@@ -22,10 +22,10 @@ sys.setdefaultencoding('utf8')
 class crawl_comment(threading.Thread):
     del_proxy_lock = threading.Lock()
     
-    def __init__(self, dict_url_id, thread_name='crawl_comment'):
+    def __init__(self, list_contains_set_weibourl_and_commenturl, thread_name='crawl_comment'):
         threading.Thread.__init__(self)
         self.name = thread_name
-        self.dict_url_id = dict_url_id
+        self.list_contains_set_weibourl_and_commenturl = list_contains_set_weibourl_and_commenturl
     
     # 抓取并解析页面
     def crawl(self, url, is_again=True, two_again=True):
@@ -77,9 +77,9 @@ class crawl_comment(threading.Thread):
             return comment_list
 
     # 将微博存储到数据库中
-    def store_comment_to_db(self, comment_list, weibo_id):
+    def store_comment_to_db(self, comment_list, weibo_url):
         for comment in comment_list:
-            unique_single = Single_comment_store(weibo_id=weibo_id, uid=comment.uid, nickname=comment.nickname, auth=comment.auth, content=comment.content, praise_num=comment.praise_num, creat_time=comment.creat_time)
+            unique_single = Single_comment_store(weibo_id=weibo_url, uid=comment.uid, nickname=comment.nickname, auth=comment.auth, content=comment.content, praise_num=comment.praise_num, creat_time=comment.creat_time)
             try:
                 unique_single.save()
             except NotUniqueError:
@@ -91,10 +91,16 @@ class crawl_comment(threading.Thread):
         pass
     
     def run(self):
-        for url_key in self.dict_url_id:
-            weibo_id = self.dict_url_id[url_key]
-            comment_list = self.crawl(url_key)
-            self.store_comment_to_db(comment_list, weibo_id)
+        for weibo_url, comment_url in self.list_contains_set_weibourl_and_commenturl:            
+            comment_list = self.crawl(comment_url)
+            
+            # 如果抓取的 comment 的数目 不为 0 ，则可以从数据库中删除之
+            if len(comment_list) > 0:
+                WeiboSearchLog().get_scheduler_logger().info("done----" + str(comment_url))
+                Weibo_url_to_Comment_url.objects(comment_url=str(comment_url)).delete()
+                pass
+            
+            self.store_comment_to_db(comment_list, weibo_url)
         pass
 
 

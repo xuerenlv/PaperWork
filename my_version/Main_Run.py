@@ -7,19 +7,19 @@ Created on 2015-08-21
 '''
 from craw_page_parse import crawl_real_time_with_keyword, \
     crawl_set_time_with_keyword, crawl_set_time_with_keyword_and_nickname
-
 # from craw_page_parse import  crawl_set_time_with_only_keyword
-
 import os
 import logging.config
 import datetime
 from crawl_comment_from_db import crawl_comment
 from craw_page_parse_2 import crawl_uid_from_nickname, \
     crawl_userinfo_from_uname_or_uid, crawl_userinfo_2_from_uid
-from utils_no_crwal import read_file_fetch_something
 from store_model import UserInfo_store, Single_weibo_with_more_info_store, \
-    Bie_Ming_store
+    Bie_Ming_store,Weibo_url_to_Comment_url
+
 from urllib import quote_plus
+
+
 
 if not os.path.exists( 'logs/' ):
     os.mkdir( 'logs' )
@@ -64,33 +64,27 @@ def crawl_set_time_main_little( key_word, start_time, end_time, nickname_list ):
     return thrads_list
     
 
-#  根据给出的微博文件名，爬取评论
-#  从本地文件中获取 微博url
-def crawl_comment_from_fie( weibo_file_name ):
+
+# 从 数据库 中已转换的 comment url 中 提取url，然后进行抓取
+def crawl_comment_from_fie():
     #  从单独的微博文件中读取信息
-    dict_url_id = read_file_fetch_something( weibo_file_name )
+    
     all_thrads_list = []
     
-    dict_key_list = []
-    start = 0;
-    end = 2000;
-    # 每2000个创建一个线程
-    while end < len( dict_url_id.keys() ):
-        dict_key_list.append( dict_url_id.keys()[start:end] )
-        start += 2000
-        end += 2000;
-    if start <= len( dict_url_id.keys() ):
-        dict_key_list.append( dict_url_id.keys()[start:] )
+    # 读出数据
+    list_contains_set_weibourl_and_commenturl = []
+    global Weibo_url_to_Comment_url
+    for one_entry in Weibo_url_to_Comment_url.objects:
+        list_contains_set_weibourl_and_commenturl.append((one_entry['weibo_url'],one_entry['comment_url']))
     
-    count = 1
-    for dict_key_list_one in dict_key_list:
-        dict__one_dict = {}
-        for key in dict_key_list_one:
-            dict__one_dict[key] = dict_url_id[key]
-        all_thrads_list.append( crawl_comment( dict__one_dict, 'crawl_comment___' + str( count ) ) )
-        count += 1
+    one_piece = len(list_contains_set_weibourl_and_commenturl)/10
+    for i in range(10):
+        all_thrads_list.append( crawl_comment( list_contains_set_weibourl_and_commenturl[i*one_piece:(i+1)*one_piece], 'crawl_comment___' + str( i ) ) )
         
-    return all_thrads_list
+    for thread in all_thrads_list:
+        thread.start()
+    for thread in all_thrads_list:
+        thread.join()
     
 
 # 抓取一个关键词下所有的微博；也可以抓取一个 hashtag 下所有的微博，但是要修改相应的 初始url
@@ -287,7 +281,9 @@ if __name__ == '__main__':
 #     key_words_list,start_time,end_time=gen_keywords_list()
 #     crawl_keywords_list(key_words_list, start_time, end_time)
     
-    crawl_one_keyword()
+#     crawl_one_keyword()
+    
+    crawl_comment_from_fie()
     
 #     chuli_nickname_crawl_userinfo()
     

@@ -165,7 +165,9 @@ class UserInfo_store(Document):
     weibo_all_nums= StringField()
     guan_zhu_nums= StringField()
 
+#**************************************************   comment start
 class Single_comment_store(Document):
+    meta = {'collection': 'zhuanjiyin_nohashtag_original_single_comment_2016_offical_1'}
     weibo_id = StringField()
     uid = StringField()
     nickname = StringField()
@@ -173,6 +175,12 @@ class Single_comment_store(Document):
     content = StringField()
     praise_num = StringField()
     creat_time = StringField()
+
+class Weibo_url_to_Comment_url(Document):
+    meta = {'collection': 'zhuanjiyin_nohashtag_original_weibourl_to_commenturl_2016'}
+    weibo_url = StringField()
+    comment_url = StringField()
+#**************************************************   comment end
 
 # 在抓取用户信息的时候，发现有一种映射关系
 # INFO:Thread-4 insert to database, not unique ! 1749990115 crawl: bjyouth
@@ -202,7 +210,7 @@ class Single_weibo_store(Document):
     all_weibo_num = StringField()
     
 class Single_weibo_with_more_info_store(Document):
-    meta = {'collection': 'zhuanjiyin_nohashtag_original_2016_02_15_to_2016_02_26_detmine_3'}
+    meta = {'collection': 'new_mac_test_1'}
     uid = StringField()
     nickname = StringField()
     is_auth = StringField()
