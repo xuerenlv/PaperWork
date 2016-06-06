@@ -41,7 +41,7 @@ class SingleWeibo():
 # 单独的一条微博，有转发信息，@信息，＃信息            
 class SingleWeibo_with_more_info():
     
-    def __init__(self, uid, nickname, is_auth, user_url, weibo_url, content, praise_num, retweet_num, comment_num, creat_time, all_weibo_num, come_from_user_id,come_from_nickname, come_from_url, come_from_user_is_V, at_info, hash_info, original_retweet_num, original_praise_num, original_comment_num, retweet_reason,retweet_reason_hash_tag,retweet_reason_at_info):
+    def __init__(self, uid, nickname, is_auth, user_url, weibo_url, content, praise_num, retweet_num, comment_num, creat_time, all_weibo_num, come_from_user_id, come_from_nickname, come_from_url, come_from_user_is_V, at_info, hash_info, original_retweet_num, original_praise_num, original_comment_num, retweet_reason, retweet_reason_hash_tag, retweet_reason_at_info):
         self.uid = uid
         self.nickname = nickname
         self.is_auth = is_auth
@@ -81,11 +81,13 @@ class SingleWeibo_with_more_info():
 
 class Single_comment():
     
-    def __init__(self, uid, nickname, auth, content, praise_num, creat_time):
+    def __init__(self, uid, nickname, auth, content, hash_tag_info, at_info, praise_num, creat_time):
         self.uid = uid
         self.nickname = nickname
         self.auth = auth
         self.content = content
+        self.hash_tag_info = hash_tag_info
+        self.at_info = at_info
         self.praise_num = praise_num
         self.creat_time = creat_time
     
@@ -94,7 +96,7 @@ class Single_comment():
 
 class UserInfo():
         
-    def __init__(self, uid_or_uname, nickname, is_persion, check_or_not, fensi,sex,location,check_info,weibo_all_nums,guan_zhu_nums):
+    def __init__(self, uid_or_uname, nickname, is_persion, check_or_not, fensi, sex, location, check_info, weibo_all_nums, guan_zhu_nums):
         self.uid_or_uname = uid_or_uname
         self.nickname = nickname
         self.is_persion = is_persion
@@ -159,20 +161,22 @@ class UserInfo_store(Document):
     check_or_not = StringField()
     fensi = StringField()
     
-    sex= StringField()
-    location= StringField()
-    check_info= StringField()
-    weibo_all_nums= StringField()
-    guan_zhu_nums= StringField()
+    sex = StringField()
+    location = StringField()
+    check_info = StringField()
+    weibo_all_nums = StringField()
+    guan_zhu_nums = StringField()
 
 #**************************************************   comment start
 class Single_comment_store(Document):
-    meta = {'collection': 'zhuanjiyin_nohashtag_original_single_comment_2016_offical_1'}
+    meta = {'collection': 'zhuanjiyin_nohashtag_original_single_comment_2016_with_more_info'}
     weibo_id = StringField()
     uid = StringField()
     nickname = StringField()
     auth = StringField()
     content = StringField()
+    hash_tag_info = StringField()
+    at_info = StringField()
     praise_num = StringField()
     creat_time = StringField()
 

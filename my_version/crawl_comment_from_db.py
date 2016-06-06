@@ -15,10 +15,11 @@ from my_log import WeiboSearchLog
 from bs4 import BeautifulSoup
 import traceback
 from mongoengine.errors import NotUniqueError
+from urllib import unquote_plus
 reload(sys)  
 sys.setdefaultencoding('utf8')   
 
-
+# 抓取一条微博下面的所有评论
 class crawl_comment(threading.Thread):
     del_proxy_lock = threading.Lock()
     
@@ -40,7 +41,7 @@ class crawl_comment(threading.Thread):
         page = ""
         try:
             page = craw_object.get_page()
-            comment_list = page_parser_from_search_for_comment(page)
+            comment_list = page_parser_from_search_for_comment(page)  # 解析页面，生成一条条的 comment
         except:
             print traceback.format_exc()
             crawl_comment.del_proxy_lock.acquire()
@@ -79,7 +80,7 @@ class crawl_comment(threading.Thread):
     # 将微博存储到数据库中
     def store_comment_to_db(self, comment_list, weibo_url):
         for comment in comment_list:
-            unique_single = Single_comment_store(weibo_id=weibo_url, uid=comment.uid, nickname=comment.nickname, auth=comment.auth, content=comment.content, praise_num=comment.praise_num, creat_time=comment.creat_time)
+            unique_single = Single_comment_store(weibo_id=weibo_url, uid=comment.uid, nickname=comment.nickname, auth=comment.auth, content=comment.content, hash_tag_info=comment.hash_tag_info, at_info=comment.at_info, praise_num=comment.praise_num, creat_time=comment.creat_time)
             try:
                 unique_single.save()
             except NotUniqueError:
@@ -122,6 +123,9 @@ def page_parser_from_search_for_comment(page):
                 if 'href' in a_one.attrs and str(a_one.attrs['href']).startswith('/u/'):
                     uid = str(a_one.attrs['href'])[3:]
                     nickname = a_one.getText()
+                if 'href' in a_one.attrs and str(a_one.attrs['href']).count('/') == 1:
+                    uid = str(a_one.attrs['href'])[1:]
+                    nickname = a_one.getText()
             
             auth = ''
             imag_all = div_one.findAll('img')
@@ -131,9 +135,26 @@ def page_parser_from_search_for_comment(page):
                 if 'alt' in imag_one.attrs and str(imag_one.attrs['alt']).startswith(u'达人'):
                     auth = u'达人'
             
+            # 在这里可以多抓一点信息
             content = ''
             span_ctt = div_one.find('span', attrs={"class":"ctt"})
             content = span_ctt.getText()
+            
+            hash_tag_list = []
+            at_info_list = []
+            #-----------------------------------------------at and hashtag
+            for a_html in span_ctt.findAll('a'):
+                a_html_text = str(a_html.getText())
+                if u'#' in a_html_text:
+                    hash_tag_list.append(a_html_text)
+                if u'@' in a_html_text:
+                    at_href = str(a_html.attrs['href'])
+                    decode_url = unquote_plus(at_href[at_href.rfind("/") + 1:])
+                    at_info_list.append(decode_url + ":" + a_html_text)
+            
+            hash_tag_info = '[fen_ge]'.join(hash_tag_list)
+            at_info = '[fen_ge]'.join(at_info_list)
+            #-----------------------------------------------at and hashtag
             
             praise_num = ''
             span_cc_all = div_one.findAll('span', attrs={"class":"cc"})
@@ -146,7 +167,7 @@ def page_parser_from_search_for_comment(page):
             span_ct = div_one.find('span', attrs={"class":"ct"})
             creat_time = span_ct.getText()
             
-            single_comment_object = Single_comment(uid, nickname, auth, content, praise_num, creat_time)
+            single_comment_object = Single_comment(uid, nickname, auth, content, hash_tag_info, at_info, praise_num, creat_time)
             comment_list.append(single_comment_object)
     return comment_list   
 
