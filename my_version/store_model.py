@@ -93,6 +93,21 @@ class Single_comment():
     
     def to_string(self):
         return self.uid + '\t' + self.nickname + '\t' + self.auth + '\t' + self.content + '\t' + self.praise_num + '\t' + self.creat_time
+    
+class Single_repost():
+    
+    def __init__(self, uid, nickname, auth, content, hash_tag_info, at_info, praise_num, creat_time):
+        self.uid = uid
+        self.nickname = nickname
+        self.auth = auth
+        self.content = content
+        self.hash_tag_info = hash_tag_info
+        self.at_info = at_info
+        self.praise_num = praise_num
+        self.creat_time = creat_time
+    
+    def to_string(self):
+        return self.uid + '\t' + self.nickname + '\t' + self.auth + '\t' + self.content + '\t' + self.praise_num + '\t' + self.creat_time
 
 class UserInfo():
         
@@ -169,7 +184,7 @@ class UserInfo_store(Document):
 
 #**************************************************   comment start
 class Single_comment_store(Document):
-    meta = {'collection': 'zhuanjiyin_nohashtag_original_single_comment_2016_with_more_info'}
+    meta = {'collection': 'zhuanjiyin_nohashtag_original_single_comment_2016_with_more_info_repair'}
     weibo_id = StringField()
     uid = StringField()
     nickname = StringField()
@@ -181,10 +196,34 @@ class Single_comment_store(Document):
     creat_time = StringField()
 
 class Weibo_url_to_Comment_url(Document):
-    meta = {'collection': 'zhuanjiyin_nohashtag_original_weibourl_to_commenturl_2016'}
+    meta = {'collection': 'zhuanjiyin_nohashtag_original_weibourl_to_commenturl_repair_2016'}
     weibo_url = StringField()
     comment_url = StringField()
 #**************************************************   comment end
+
+
+#*************************************************    retweet start
+
+class Single_repost_store(Document):
+    meta = {'collection': 'zhuanjiyin_nohashtag_original_single_repost_2014_with_more_info_repair'}
+    weibo_id = StringField()
+    uid = StringField()
+    nickname = StringField()
+    auth = StringField()
+    content = StringField()
+    hash_tag_info = StringField()
+    at_info = StringField()
+    praise_num = StringField()
+    creat_time = StringField()
+
+
+class Weibo_url_to_repost_url(Document):
+    meta = {'collection': 'zhuanjiyin_nohashtag_original_weibourl_to_reposturl_repair_2014'}
+    weibo_url = StringField()
+    repost_url = StringField()
+
+#*************************************************    retweet end
+
 
 # 在抓取用户信息的时候，发现有一种映射关系
 # INFO:Thread-4 insert to database, not unique ! 1749990115 crawl: bjyouth
@@ -214,7 +253,7 @@ class Single_weibo_store(Document):
     all_weibo_num = StringField()
     
 class Single_weibo_with_more_info_store(Document):
-    meta = {'collection': 'new_mac_test_1'}
+    meta = {'collection': 'zhuanjiyin_nohashtag_original_2016_02_16_to_2016_02_26_detmine_repair_3'}
     uid = StringField()
     nickname = StringField()
     is_auth = StringField()

@@ -1,4 +1,10 @@
 login:
+    - username: 474407250@qq.com
+      password: justfortest
+    - username: 934193889@qq.com
+      password: niuliqiangsina
+    - username: howardit@126.com
+      password: howardit@911
     - username: chengchuan90@yahoo.com
       password: yahoo_900119
     - username: chengc@nlp.nju.edu.cn
@@ -9,12 +15,8 @@ login:
       password: weibo112233
     - username: njunlpir@163.com
       password: ilove2hcx
-    - username: 474407250@qq.com
-      password: justfortest
-    - username: 934193889@qq.com
-      password: niuliqiangsina
-    - username: howardit@126.com
-      password: howardit@911
+
+
 
 
 searchdb:

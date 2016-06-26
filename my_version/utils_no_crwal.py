@@ -6,7 +6,7 @@ Created on Jan 13, 2016
 @author: nlp
 '''
 from store_model import Single_weibo_with_more_info_store, Single_comment_store, \
-    UserInfo_store, Weibo_url_to_Comment_url
+    UserInfo_store, Weibo_url_to_Comment_url, Weibo_url_to_repost_url
 from mongoengine.context_managers import switch_collection
 import traceback
 
@@ -104,19 +104,18 @@ def main_get_userinfo_from_db():
     file_w.flush()
     file_w.close()
 
-    
+
 # 为了抓取微博的评论数据，将数据库中的单条微博进行转换————》weibo_url : weibo comment url
-def parse_weibo_to_comment_url():
-    
+def parse_weibo_to_comment_url():        
     # 对那些 collection 进行操作
-#     weibo_collection_name = ["zhuanjiyin_nohashtag_original_2014_03_01_to_2014_03_10_detmine_1", \
-#                         "zhuanjiyin_nohashtag_original_2014_03_10_to_2014_03_20_detmine_2", \
-#                         "zhuanjiyin_nohashtag_original_2014_03_20_to_2014_04_01_detmine_3"]
+    weibo_collection_name = ["zhuanjiyin_nohashtag_original_2014_03_01_to_2014_03_10_detmine_repair_1", \
+                        "zhuanjiyin_nohashtag_original_2014_03_11_to_2014_03_20_detmine_repair_2", \
+                        "zhuanjiyin_nohashtag_original_2014_03_21_to_2014_03_31_detmine_repair_3"]
     
     
-    weibo_collection_name = ["zhuanjiyin_nohashtag_original_2016_01_27_to_2016_02_05_detmine_1", \
-                          "zhuanjiyin_nohashtag_original_2016_02_05_to_2016_02_15_detmine_2", \
-                          "zhuanjiyin_nohashtag_original_2016_02_15_to_2016_02_26_detmine_3"]    
+#     weibo_collection_name = ["zhuanjiyin_nohashtag_original_2016_01_27_to_2016_02_05_detmine_repair_1", \
+#                           "zhuanjiyin_nohashtag_original_2016_02_06_to_2016_02_15_detmine_repair_2", \
+#                           "zhuanjiyin_nohashtag_original_2016_02_16_to_2016_02_26_detmine_repair_3"]    
 
     global Single_weibo_with_more_info_store
     for one_collection in weibo_collection_name:
@@ -150,10 +149,65 @@ def parse_weibo_to_comment_url():
     
     pass 
 
+
+    
+    
+# 为了抓取 转发 信息，
+def parse_weibo_to_retweet_url():
+    # 对那些 collection 进行操作
+    weibo_collection_name = ["zhuanjiyin_nohashtag_original_2014_03_01_to_2014_03_10_detmine_repair_1", \
+                        "zhuanjiyin_nohashtag_original_2014_03_11_to_2014_03_20_detmine_repair_2", \
+                        "zhuanjiyin_nohashtag_original_2014_03_21_to_2014_03_31_detmine_repair_3"]
+#     
+    
+#     weibo_collection_name = ["zhuanjiyin_nohashtag_original_2016_01_27_to_2016_02_05_detmine_repair_1", \
+#                           "zhuanjiyin_nohashtag_original_2016_02_06_to_2016_02_15_detmine_repair_2", \
+#                           "zhuanjiyin_nohashtag_original_2016_02_16_to_2016_02_26_detmine_repair_3"]    
+
+    global Single_weibo_with_more_info_store
+    for one_collection in weibo_collection_name:
+        with switch_collection(Single_weibo_with_more_info_store, one_collection) as Single_weibo_with_more_info_store:
+            for entry_s in Single_weibo_with_more_info_store.objects:
+                weibo_url = entry_s['weibo_url']
+                retweet_num = entry_s['retweet_num']
+                if len(retweet_num) == 0:
+                    continue
+                
+                weibo_loc = weibo_url[weibo_url.rfind('/') + 1:]
+                retweet_num_first_part = "http://weibo.cn/repost/" + weibo_loc + "?rl=1&page="
+                
+                retweet_num_candidate = int(retweet_num)
+                if retweet_num_candidate > 4000:
+                    retweet_num = 4000
+                else:
+                    retweet_num = retweet_num_candidate
+                if retweet_num < 3:
+                    continue
+                yemian_num = retweet_num / 10 if retweet_num % 10 == 0 else retweet_num / 10 + 1 
+        
+                for ye in xrange(1, yemian_num + 1):
+                    retweet_url = retweet_num_first_part + str(ye)
+                    retweet_store = Weibo_url_to_repost_url(weibo_url=weibo_url, repost_url=retweet_url)
+                    try:
+                        retweet_store.save()
+                    except:
+                        print traceback.format_exc()
+                pass
+    
+    pass 
+
+
+
+
+    
+    
+
     
 if __name__ == '__main__':
     
-    parse_weibo_to_comment_url()
+    parse_weibo_to_retweet_url()
+    
+#     parse_weibo_to_comment_url()
     print "done"
     
 #     first = "single_weibo_from_10_media.txt"

@@ -170,8 +170,8 @@ class crawl_set_time_with_keyword(threading.Thread):
     def init_url_queue(self):
         how_many_days_crawl_once = self.how_many_days_crawl_once
         
-        while self.start_time + datetime.timedelta(days=how_many_days_crawl_once)< self.end_time:
-            end_2 = self.start_time + datetime.timedelta(days=how_many_days_crawl_once)
+        while self.start_time <= self.end_time:
+            end_2 = self.start_time + datetime.timedelta(days=how_many_days_crawl_once-1)
             start_time_str = datetime_to_str(self.start_time)            
             end_time_str = datetime_to_str(end_2)
             
@@ -188,24 +188,25 @@ class crawl_set_time_with_keyword(threading.Thread):
             ## 抓取 hashtag ，url 设置 end
             
             self.url_queue.put(url)
-            self.start_time = end_2
-        if self.start_time < self.end_time:
-            start_time_str = datetime_to_str(self.start_time)            
-            end_time_str = datetime_to_str(self.end_time)
+            self.start_time = end_2+datetime.timedelta(days=1)
             
-            # 原创的
-            url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&hasori=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
-            # 非原创
-#             url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
-            
-            ## 抓取 hashtag ，url 设置 start
-            # 所有的都抓，不只抓原创的
-#             url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
-            # 只抓原创的
-            #url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&hasori=1&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
-            ## 抓取 hashtag ，url 设置 end
-            
-            self.url_queue.put(url)
+#         if self.start_time <= self.end_time:
+#             start_time_str = datetime_to_str(self.start_time)            
+#             end_time_str = datetime_to_str(self.end_time)
+#             
+#             # 原创的
+#             url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&hasori=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
+#             # 非原创
+# #             url = 'http://weibo.cn/search/mblog?hideSearchFrame=&keyword=' + self.keyword + '&advancedfilter=1&starttime=' + start_time_str + '&endtime=' + end_time_str + "&sort=time&page=1"
+#             
+#             ## 抓取 hashtag ，url 设置 start
+#             # 所有的都抓，不只抓原创的
+# #             url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+#             # 只抓原创的
+#             #url = "http://weibo.cn/search/mblog?hideSearchFrame=&keyword=%23" + self.keyword + "&hasori=1&advancedfilter=1&starttime=" + start_time_str + "&endtime=" + end_time_str + "&sort=time&page=1"
+#             ## 抓取 hashtag ，url 设置 end
+#             
+#             self.url_queue.put(url)
             pass
         pass
     
