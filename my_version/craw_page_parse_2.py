@@ -21,7 +21,8 @@ import re
 from Queue import Queue
 import datetime
 from store_model import Single_weibo_store, UserInfo, UserInfo_store, \
-    UserInfo_loc, UserInfo_loc_store, Bie_Ming_store
+    UserInfo_loc, UserInfo_loc_store, Bie_Ming_store, \
+    UserInfo_for_regester_time_store, UserInfo_for_regester_time
 from mongoengine.errors import NotUniqueError
 import random
 from craw_page_parse import Crawler_with_proxy, crawl_set_time_with_keyword
@@ -29,6 +30,7 @@ from craw_page_parse import Crawler_with_proxy, crawl_set_time_with_keyword
 import sys  
 from urllib import quote, quote_plus
 from mongoengine.queryset.visitor import Q
+import json
 reload(sys)  
 sys.setdefaultencoding('utf8')   
 
@@ -117,12 +119,14 @@ class crawl_userinfo_from_uname_or_uid(threading.Thread):
     
 #     http://weibo.cn/breakingnews?f=search_0
     def init_url_queue(self):
+        global UserInfo_store
         for uid_or_nickname in self.uid_or_uname_list:            
             if len(UserInfo_store.objects(Q(uid_or_uname=str(uid_or_nickname)) | Q(nickname=str(uid_or_nickname)))) != 0 or\
             len(Bie_Ming_store.objects(Q(uid_or_uname=str(uid_or_nickname)) | Q(bie_ming=str(uid_or_nickname)))) != 0:
                 continue
            
             self.url_queue.put(uid_or_nickname)
+        print "crawl size ::::::::: ", self.url_queue.qsize()
         pass
         
     # 抓取并解析页面
@@ -141,6 +145,9 @@ class crawl_userinfo_from_uname_or_uid(threading.Thread):
         except:
             print  traceback.format_exc()
             print  uid_or_nickname
+        
+#         url = "http://weibo.cn/" + uid_or_nickname + "?f=search_0"
+            
         if quote_uid_or_nickname == uid_or_nickname:
             url = "http://weibo.cn/" + uid_or_nickname + "?f=search_0"
         else:
@@ -236,7 +243,8 @@ class crawl_userinfo_from_uname_or_uid(threading.Thread):
 
 
 
-# # 通过 uid_or_uname 抓取 用户信息 (位置信息)
+# # 通过 uid_or_uname 抓取 用户信息 (位置信息) 
+# 这里主要是uid，可以抓取到生日信息
 class crawl_userinfo_2_from_uid(threading.Thread):  
     
     def __init__(self, uid_or_uname_list, thread_name='crawl_userinfo_from_uname_or_uid'):
@@ -318,8 +326,87 @@ class crawl_userinfo_2_from_uid(threading.Thread):
 
 
 
+# 要从 网页端 进行抓取，为了提取用户的注册时间
+class crawl_userinfo_3_for_regester_time(threading.Thread):  
+    
+    def __init__(self, uid_or_uname_list, thread_name='crawl_userinfo_for_regester_times'):
+        threading.Thread.__init__(self)
+        self.uid_or_uname_list = uid_or_uname_list
 
-
+        self.url_queue = Queue()
+        self.second_url_queue = Queue() 
+        pass
+    
+#     http://weibo.cn/1806760610/info
+    def init_url_queue(self):
+        for uid_or_nickname in self.uid_or_uname_list:
+            url = "http://weibo.com/" + uid_or_nickname + "/info"
+            self.url_queue.put(url)
+        pass
+        
+    # 抓取并解析页面
+    def crawl(self, url, is_again=True):
+        loginer = Loginer()
+        cookie = loginer.get_cookie()
+        proxy = loginer.get_proxy()
+        craw_object = Crawler_with_proxy(url, cookie, proxy)
+        
+        WeiboSearchLog().get_scheduler_logger().info(self.name + " start to crawl ! " + url)
+        
+        userInfo_for_regester_time = ""
+        try:
+            page = craw_object.get_page()
+            
+            userInfo_for_regester_time = page_parser_from_search_for_UserInfo_for_regester_time(page, url)
+        except:
+            print traceback.format_exc()
+            crawl_set_time_with_keyword.del_proxy_lock.acquire()
+            if proxy == loginer.get_proxy():
+                loginer.del_proxy()
+                WeiboSearchLog().get_scheduler_logger().warning(self.name + " proxy exception , change proxy !")
+            crawl_set_time_with_keyword.del_proxy_lock.release()
+            if is_again:
+                return self.crawl(url, is_again=False)
+            else:
+                self.second_url_queue.put(url)
+                return userInfo_for_regester_time
+        return userInfo_for_regester_time
+    
+    
+#     uid_or_uname = StringField(unique=True)
+#     nickname = StringField()
+#     is_persion = StringField()
+#     check_or_not = StringField()
+#     fensi = StringField()
+    
+    def store_userinfo_loc_to_db(self, userInfo_for_regester_time):
+        
+        unique_user_info = UserInfo_for_regester_time_store(uid=userInfo_for_regester_time.uid, nickname=userInfo_for_regester_time.nickname, \
+                                                            location=userInfo_for_regester_time.location, sex=userInfo_for_regester_time.sex, \
+                                                            birth=userInfo_for_regester_time.birth, regester_time=userInfo_for_regester_time.regester_time)
+        try:
+            unique_user_info.save()
+        except NotUniqueError:
+            pass
+        except:
+            WeiboSearchLog().get_scheduler_logger().info(self.name + " insert to database, something wrong !")
+            pass
+        WeiboSearchLog().get_scheduler_logger().info(self.name + " insert to database, success !")
+        pass
+    
+    
+    def run(self):
+        self.init_url_queue()
+        while not self.url_queue.empty() or not self.second_url_queue.empty():
+            url = ""
+            if not self.url_queue.empty():
+                url = self.url_queue.get()
+            else:
+                url = self.second_url_queue.get()
+            userInfo_for_regester_time = self.crawl(url)
+#             print user_info.to_string()
+            self.store_userinfo_loc_to_db(userInfo_for_regester_time)
+        pass  
 
 
 
@@ -468,3 +555,58 @@ def page_parser_from_search_for_uid(page):
     uid_or_uname = a_href[a_href.rfind('/') + 1:a_href.find('?')] 
     
     return uid_or_uname
+
+
+# # 通过 http://weibo.com/1802646764/info 来抓取用户信息，主要是为了抓取用户的注册时间 
+def page_parser_from_search_for_UserInfo_for_regester_time(page, url):
+    uid = url[url.find('com/') + 4:url.rfind('/')]    
+    nickname = ""
+    location = ""
+    sex = ""
+    birth = ""
+    regester_time = ""
+    
+    soup = BeautifulSoup(page)
+    for script in soup.findAll('script'):
+        text = script.text
+        if 'FM.view(' in text:
+            text = text[8:]
+            if text.endswith(')'):
+                text = text[:-1]
+            if text.endswith(');'):
+                text = text[:-2]
+            data = json.loads(text)
+            inner_html = data.get('html')
+            if inner_html is None:
+                continue
+            inner_soup = BeautifulSoup(inner_html)
+#             pf_items = inner_soup.findAll('div',  attrs={'class': 'pf_item clearfix'})
+            
+                    
+            li_1_clearfix_all = inner_soup.findAll('li', attrs={'class':'li_1 clearfix'})
+            for one_li in li_1_clearfix_all:
+                this_text = one_li.getText()
+        
+#                 print this_text
+                if u'昵称' in this_text:
+                    nickname = this_text[this_text.find(u'昵称') + 3:].strip()
+                    continue
+                if u'所在地' in this_text:
+                    location = this_text[this_text.find(u'所在地') + 4:].strip()
+                    continue
+                if u'性别' in this_text:
+                    sex = this_text[this_text.find(u'性别') + 3:].strip()
+                    continue
+                if u'生日' in this_text:
+                    birth = this_text[this_text.find(u'生日') + 3:].strip()
+                    continue
+                if u'注册时间' in this_text:
+                    regester_time = this_text[this_text.find(u'注册时间') + 5:].strip()
+                    continue
+    userInfo_for_regester_time = UserInfo_for_regester_time(uid,nickname,location,sex,birth,regester_time)
+    
+#     userInfo_for_regester_time.print_self()
+    
+    return userInfo_for_regester_time
+
+

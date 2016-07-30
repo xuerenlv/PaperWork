@@ -224,4 +224,4 @@ def get_user(username):
 
 
 if __name__ == '__main__':
-    print login("cc.square0@gmail.com" ,'justfortest','./weibo_login_cookies.dat')
+    print do_login("cc.square0@gmail.com" ,'justfortest','./weibo_login_cookies.dat')

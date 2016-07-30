@@ -1,6 +1,4 @@
 login:
-    - username: 474407250@qq.com
-      password: justfortest
     - username: 934193889@qq.com
       password: niuliqiangsina
     - username: howardit@126.com
@@ -15,6 +13,8 @@ login:
       password: weibo112233
     - username: njunlpir@163.com
       password: ilove2hcx
+    - username: 474407250@qq.com
+      password: justfortest
 
 
 
@@ -22,7 +22,7 @@ login:
 searchdb:
 
     dbname: second_zhuanjiyin_3_networks
-    host: 114.212.83.2
+    host: 172.28.24.246
     port: 27017
 
 proxies:

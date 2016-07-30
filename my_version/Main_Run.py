@@ -17,8 +17,9 @@ from craw_page_parse_2 import crawl_uid_from_nickname, \
     crawl_userinfo_from_uname_or_uid, crawl_userinfo_2_from_uid
 from store_model import UserInfo_store, Single_weibo_with_more_info_store, \
     Bie_Ming_store, Weibo_url_to_Comment_url, Single_comment, \
-    Single_comment_store, Weibo_url_to_repost_url
-
+    Single_comment_store, Weibo_url_to_repost_url, Single_repost_store,\
+    UserInfo_for_regester_time_store
+from craw_page_parse_2 import crawl_userinfo_3_for_regester_time
 from urllib import quote_plus
 from mongoengine.context_managers import switch_collection
 from mongoengine.queryset.visitor import Q
@@ -159,7 +160,14 @@ def crawl_set_user_weibo_about_keyword():
 ####################################################################################### crawl userinfo start
 # 通过用户的uid来抓取用户信息，，抓取任务中的一个需要
 def chuli_nickname_crawl_userinfo():
-    uid_or_uname_list = read_data_from_database_for___uid_or_uname_list()
+    uid_or_uname_list = []
+#     uid_or_uname_list = read_data_from_database_for___uid_or_uname_list()
+    
+    with open("test_nolabels.txt") as file_r:
+        for one_line in file_r.readlines():
+            uid_or_uname_list.append(one_line[:-2])
+    print len(uid_or_uname_list)
+    
     how_many_uids_one_thread = len(uid_or_uname_list) / 10
     
     all_thrads_list = []
@@ -178,6 +186,41 @@ def chuli_nickname_crawl_userinfo():
         thread.start()
     for thread in all_thrads_list:
         thread.join()  
+
+# 抓取用户信息，从网页端，主要是为了 注册时间
+def crawl_userinfo_for_regester_time():
+    uid_crawl_list = []
+    count = 1
+    for one_user in UserInfo_store.objects:
+        uid = one_user['uid_or_uname']
+        if  len(UserInfo_for_regester_time_store.objects(uid=uid))==0:
+            uid_crawl_list.append(uid)
+        print count
+        count += 1
+    
+    print len(uid_crawl_list)
+    how_many_uids_one_thread = len(uid_crawl_list) / 10
+    
+    all_thrads_list = []
+    start = 0
+    end = how_many_uids_one_thread
+    count = 0
+    while end < len(uid_crawl_list):
+        all_thrads_list.append(crawl_userinfo_3_for_regester_time(uid_crawl_list[start:end], "crawl_userinfo_for_regestertime_" + str(count)))
+        start = start + how_many_uids_one_thread
+        end = end + how_many_uids_one_thread
+        count = count + 1
+    if start < len(uid_crawl_list):
+        all_thrads_list.append(crawl_userinfo_3_for_regester_time(uid_crawl_list[start:len(uid_crawl_list)], "crawl_userinfo_for_regestertime_" + str(count)))
+     
+    for thread in all_thrads_list:
+        thread.start()
+    for thread in all_thrads_list:
+        thread.join()  
+    
+    
+    
+    pass
 
 # 从数据库中取出已经爬取的用户信息的 uid 与 nickname
 def read_data_from_database_uids_and_nicknames():
@@ -236,7 +279,8 @@ def read_data_from_database_for___uid_or_uname_list():
     # 处理 comment 中的用户信息
     # 'zhuanjiyin_nohashtag_original_single_comment_2016_with_more_info'
     print "start comment"
-    comment_collections = ['zhuanjiyin_nohashtag_original_single_comment_2014_with_more_info_repair']
+    comment_collections = []
+#     comment_collections.append('zhuanjiyin_nohashtag_original_single_comment_2014_with_more_info_repair')
     
     global Single_comment_store
     for one_collection in comment_collections:
@@ -244,6 +288,18 @@ def read_data_from_database_for___uid_or_uname_list():
             for one_comment in Single_comment_store.objects:
                 this_uid_list.append(one_comment["uid"])
                 this_nickname_list.extend(chuli_at_info(one_comment["at_info"]))
+                
+    print "start repost"
+    repost_collections = []
+    repost_collections.append("zhuanjiyin_nohashtag_original_single_repost_2016_with_more_info_repair")
+
+    global Single_repost_store
+    for one_collection in repost_collections:
+        with switch_collection(Single_repost_store, one_collection) as Single_repost_store:
+            for one_comment in Single_repost_store.objects:
+                this_uid_list.append(one_comment["uid"])
+                this_nickname_list.extend(chuli_at_info(one_comment["at_info"]))
+                
                 
     uid_or_uname_list.extend(list(set(this_uid_list)))
     uid_or_uname_list.extend(list(set(this_nickname_list)))
@@ -341,10 +397,13 @@ if __name__ == '__main__':
     
     # 抓取用户转发，通过已转换好的 repost url
     
-    crawl_repost_from_db() 
+#     crawl_repost_from_db() 
     
     # 从数据库中，读取 uid 昵称 之类，然后去抓取用户信息
 #     chuli_nickname_crawl_userinfo()
+    
+    # 从数据库中提取 uid ，然后 通过 网页端 的 网页 抓取用户的注册信息
+    crawl_userinfo_for_regester_time()
 
     # 抓取特定用户，关于特定关键词的微博     
 #     crawl_set_user_weibo_about_keyword()

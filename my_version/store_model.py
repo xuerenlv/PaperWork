@@ -153,11 +153,37 @@ class UserInfo_loc():
         return "[昵称：" + self.nickname + "]" + "[所在地：" + self.location + "]" + "[性别：" + self.sex + "]" + "[是否验证：" + self.check_or_not + "]" + "[" + self.check_info + "]" + "[生日：" + self.birth + "]" + "[简介：" + self.intro + "]"
 
 
-
-
+class UserInfo_for_regester_time():
+    
+    def __init__(self, uid, nickname, location, sex, birth, regester_time):
+        self.uid = uid
+        self.nickname = nickname
+        self.location = location
+        self.sex = sex
+        self.birth = birth
+        self.regester_time = regester_time
+        pass
+    
+    def print_self(self):
+        print    "info:" + self.nickname
+        print    "info:" + self.location 
+        print    "info:" + self.sex 
+        print    "info:" + self.birth 
+        print    "info:" + self.regester_time 
 
 connect(DBNAME, host=DB_HOST, port=int(DB_PORT))
 #############################   存到mongodb   #############################################
+class UserInfo_for_regester_time_store(Document):
+    meta = {'collection': 'user_info_store_for_regestertime'}
+    uid = StringField()
+    nickname = StringField()
+    location = StringField()
+    sex = StringField()
+    birth = StringField()
+    regester_time = StringField()
+    pass
+
+
 class UserInfo_loc_store(Document):
     uid = StringField()
     nickname = StringField()
